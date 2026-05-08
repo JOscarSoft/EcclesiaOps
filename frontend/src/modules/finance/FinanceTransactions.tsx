@@ -5,17 +5,26 @@ import { useTranslation } from 'react-i18next';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import { useAuthStore } from '../../stores/authStore';
+import { TransactionFormDialog } from './TransactionFormDialog';
+
 
 export const FinanceTransactions = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [open, setOpen] = useState(false);
 
-  const { data: transactions, isLoading } = useQuery({
+  const { user } = useAuthStore();
+
+  const canManage = user?.role === 'SUPER_ADMIN' || user?.permissions?.includes('MANAGE_FINANCE');
+
+  const { data: transactions, isLoading, refetch } = useQuery({
     queryKey: ['finance-transactions', fromDate, toDate],
-    queryFn: async () => (await api.get('/tenant/finance/transactions', { 
-      params: { from: fromDate, to: toDate } 
+    queryFn: async () => (await api.get('/tenant/finance/transactions', {
+      params: { from: fromDate, to: toDate }
     })).data,
   });
 
@@ -63,9 +72,9 @@ export const FinanceTransactions = () => {
           slotProps={{ inputLabel: { shrink: true } }}
           value={fromDate}
           onChange={(e) => setFromDate(e.target.value)}
-          sx={{ 
+          sx={{
             '& .MuiInputLabel-root': { transform: 'translate(14px, -9px) scale(0.75)', bgcolor: 'background.paper', px: 0.5 },
-            '& .MuiInputBase-input': { color: 'text.primary' } 
+            '& .MuiInputBase-input': { color: 'text.primary' }
           }}
         />
         <TextField
@@ -75,13 +84,13 @@ export const FinanceTransactions = () => {
           slotProps={{ inputLabel: { shrink: true } }}
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
-          sx={{ 
+          sx={{
             '& .MuiInputLabel-root': { transform: 'translate(14px, -9px) scale(0.75)', bgcolor: 'background.paper', px: 0.5 },
-            '& .MuiInputBase-input': { color: 'text.primary' } 
+            '& .MuiInputBase-input': { color: 'text.primary' }
           }}
         />
-        <Button 
-          variant="outlined" 
+        <Button
+          variant="outlined"
           startIcon={<DownloadIcon />}
           onClick={exportToCSV}
           disabled={!transactions?.length}
@@ -89,6 +98,13 @@ export const FinanceTransactions = () => {
           Exportar CSV
         </Button>
       </Stack>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        {canManage && (
+          <Button variant="contained" startIcon={<AddIcon />} onClick={() => setOpen(true)}>
+            {t('finance.newTransaction')}
+          </Button>
+        )}
+      </Box>
 
       <TableContainer component={Paper} sx={{ borderRadius: 3, elevation: 0, border: '1px solid', borderColor: 'divider' }}>
         <Table>
@@ -110,8 +126,8 @@ export const FinanceTransactions = () => {
                 <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
                 <TableCell>{transaction.category?.name}</TableCell>
                 <TableCell>
-                  <Chip 
-                    label={transaction.kind === 'Expense' ? 'Egreso' : 'Ingreso'} 
+                  <Chip
+                    label={transaction.kind === 'Expense' ? 'Egreso' : 'Ingreso'}
                     size="small"
                     color={transaction.kind === 'Expense' ? 'error' : 'success'}
                     variant="filled"
@@ -123,9 +139,9 @@ export const FinanceTransactions = () => {
                 </TableCell>
                 <TableCell align="right">
                   <Tooltip title={t('common.delete')}>
-                    <IconButton 
-                      color="error" 
-                      size="small" 
+                    <IconButton
+                      color="error"
+                      size="small"
                       onClick={() => {
                         if (window.confirm(t('common.confirmDelete'))) {
                           deleteMutation.mutate(transaction._id);
@@ -141,6 +157,7 @@ export const FinanceTransactions = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <TransactionFormDialog open={open} onClose={() => setOpen(false)} onSuccess={refetch} />
     </Box>
   );
 };
