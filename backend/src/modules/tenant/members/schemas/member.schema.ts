@@ -1,5 +1,5 @@
-import * as MongooseModule from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 export enum Gender {
   MALE = 'MALE',
@@ -12,61 +12,45 @@ export enum MemberStatus {
   VISITOR = 'VISITOR',
 }
 
-@MongooseModule.Schema({ timestamps: true, collection: 'members' })
 export class Member extends Document {
-  @MongooseModule.Prop({ required: true })
   firstName: string;
-
-  @MongooseModule.Prop({ required: true })
   lastName: string;
-
-  @MongooseModule.Prop()
   birthDate: Date;
-
-  @MongooseModule.Prop({ type: String, enum: Gender })
   gender: Gender;
-
-  @MongooseModule.Prop({ type: String, enum: MemberStatus, default: MemberStatus.ACTIVE })
   status: MemberStatus;
-
-  @MongooseModule.Prop({ default: false })
   baptized: boolean;
-
-  @MongooseModule.Prop()
   baptismDate: Date;
-
-  @MongooseModule.Prop()
   joinDate: Date;
-
-  @MongooseModule.Prop()
   phone: string;
-
-  @MongooseModule.Prop()
   email: string;
-
-  @MongooseModule.Prop()
   address: string;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Church' })
   church: Types.ObjectId;
-
-  @MongooseModule.Prop({ type: [{ type: Types.ObjectId, ref: 'Ministry' }], default: [] })
   ministries: Types.ObjectId[];
-
-  @MongooseModule.Prop()
   familyGroup: string;
-
-  @MongooseModule.Prop()
   notes: string;
-
-  @MongooseModule.Prop()
   photoUrl: string;
-
-  @MongooseModule.Prop({ default: true })
   isActive: boolean;
 }
 
-export const MemberSchema = MongooseModule.SchemaFactory.createForClass(Member);
+export const MemberSchema = new Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  birthDate: { type: Date },
+  gender: { type: String, enum: Object.values(Gender) },
+  status: { type: String, enum: Object.values(MemberStatus), default: MemberStatus.ACTIVE },
+  baptized: { type: Boolean, default: false },
+  baptismDate: { type: Date },
+  joinDate: { type: Date },
+  phone: { type: String },
+  email: { type: String },
+  address: { type: String },
+  church: { type: Schema.Types.ObjectId, ref: 'Church' },
+  ministries: [{ type: Schema.Types.ObjectId, ref: 'Ministry' }],
+  familyGroup: { type: String },
+  notes: { type: String },
+  photoUrl: { type: String },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true, collection: 'members' });
 
 // Virtual: age
 MemberSchema.virtual('age').get(function () {

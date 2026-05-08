@@ -1,78 +1,66 @@
-import * as MongooseModule from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-@MongooseModule.Schema({ timestamps: true })
 export class FinanceCategory extends Document {
-  @MongooseModule.Prop({ required: true })
   name: string;
-
-  @MongooseModule.Prop({ required: true, enum: ['INCOME', 'EXPENSE'] })
   type: string;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Church' })
   church: Types.ObjectId;
-
-  @MongooseModule.Prop({ default: false })
   isDeleted: boolean;
 }
 
-export const FinanceCategorySchema = MongooseModule.SchemaFactory.createForClass(FinanceCategory);
+export const FinanceCategorySchema = new Schema({
+  name: { type: String, required: true },
+  type: { type: String, required: true, enum: ['INCOME', 'EXPENSE'] },
+  church: { type: Schema.Types.ObjectId, ref: 'Church' },
+  isDeleted: { type: Boolean, default: false },
+}, { timestamps: true });
 
-@MongooseModule.Schema({ timestamps: true, discriminatorKey: 'kind', collection: 'finance' })
 export class Finance extends Document {
-  @MongooseModule.Prop({ required: true })
   amount: number;
-
-  @MongooseModule.Prop({ required: true })
   date: Date;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'FinanceCategory', required: true })
   category: Types.ObjectId;
-
-  @MongooseModule.Prop({ enum: ['Tithe', 'Offering', 'Expense'], required: true })
   kind: string;
-
-  @MongooseModule.Prop()
   description: string;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Church', required: true })
   church: Types.ObjectId;
-
-  @MongooseModule.Prop({ default: false })
   isDeleted: boolean;
 }
 
-export const FinanceSchema = MongooseModule.SchemaFactory.createForClass(Finance);
+export const FinanceSchema = new Schema({
+  amount: { type: Number, required: true },
+  date: { type: Date, required: true },
+  category: { type: Schema.Types.ObjectId, ref: 'FinanceCategory', required: true },
+  kind: { type: String, enum: ['Tithe', 'Offering', 'Expense'], required: true },
+  description: { type: String },
+  church: { type: Schema.Types.ObjectId, ref: 'Church', required: true },
+  isDeleted: { type: Boolean, default: false },
+}, { timestamps: true, discriminatorKey: 'kind', collection: 'finance' });
 
 // --- Tithe Discriminator ---
-@MongooseModule.Schema()
 export class Tithe {
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Member', required: true })
   member: Types.ObjectId;
-
-  @MongooseModule.Prop({ enum: ['CASH', 'TRANSFER', 'CHECK'], default: 'CASH' })
   method: string;
 }
-export const TitheSchema = MongooseModule.SchemaFactory.createForClass(Tithe);
+export const TitheSchema = new Schema({
+  member: { type: Schema.Types.ObjectId, ref: 'Member', required: true },
+  method: { type: String, enum: ['CASH', 'TRANSFER', 'CHECK'], default: 'CASH' },
+});
 
 // --- Offering Discriminator ---
-@MongooseModule.Schema()
 export class Offering {
-  @MongooseModule.Prop({ enum: ['GENERAL', 'MISSION', 'CONSTRUCTION', 'SPECIAL'], default: 'GENERAL' })
   type: string;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Member' })
-  member: Types.ObjectId; // Optional for offerings
+  member: Types.ObjectId;
 }
-export const OfferingSchema = MongooseModule.SchemaFactory.createForClass(Offering);
+export const OfferingSchema = new Schema({
+  type: { type: String, enum: ['GENERAL', 'MISSION', 'CONSTRUCTION', 'SPECIAL'], default: 'GENERAL' },
+  member: { type: Schema.Types.ObjectId, ref: 'Member' },
+});
 
 // --- Expense Discriminator ---
-@MongooseModule.Schema()
 export class Expense {
-  @MongooseModule.Prop({ required: true })
   recipient: string;
-
-  @MongooseModule.Prop()
   referenceNumber: string;
 }
-export const ExpenseSchema = MongooseModule.SchemaFactory.createForClass(Expense);
+export const ExpenseSchema = new Schema({
+  recipient: { type: String, required: true },
+  referenceNumber: { type: String },
+});

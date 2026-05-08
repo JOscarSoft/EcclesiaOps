@@ -1,19 +1,16 @@
-import * as MongooseModule from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-@MongooseModule.Schema({ timestamps: true })
 export class ActivityType extends Document {
-  @MongooseModule.Prop({ required: true })
   name: string;
-
-  @MongooseModule.Prop({ default: '#2196f3' })
   color: string;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Council' })
   council: Types.ObjectId;
-
-  @MongooseModule.Prop({ default: true })
   isActive: boolean;
 }
 
-export const ActivityTypeSchema = MongooseModule.SchemaFactory.createForClass(ActivityType);
+export const ActivityTypeSchema = new Schema({
+  name: { type: String, required: true },
+  color: { type: String, default: '#2196f3' },
+  council: { type: Schema.Types.ObjectId, ref: 'Council' },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });

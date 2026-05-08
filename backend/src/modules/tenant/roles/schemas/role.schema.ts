@@ -1,13 +1,12 @@
-import * as MongooseModule from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-@MongooseModule.Schema({ timestamps: true })
 export class Role extends Document {
-  @MongooseModule.Prop({ required: true })
-  name: string; // e.g. ADMIN, SECRETARY, TREASURER
-
-  @MongooseModule.Prop({ type: [{ type: Types.ObjectId, ref: 'Permission' }], default: [] })
+  name: string;
   permissions: Types.ObjectId[];
 }
 
-export const RoleSchema = MongooseModule.SchemaFactory.createForClass(Role);
+export const RoleSchema = new Schema({
+  name: { type: String, required: true },
+  permissions: [{ type: Schema.Types.ObjectId, ref: 'Permission' }],
+}, { timestamps: true });
