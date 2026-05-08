@@ -13,12 +13,15 @@ export class FinanceCategory extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'Church' })
   church: Types.ObjectId;
+
+  @Prop({ default: false })
+  isDeleted: boolean;
 }
 
 export const FinanceCategorySchema = SchemaFactory.createForClass(FinanceCategory);
 
-@Schema({ timestamps: true })
-export class Transaction extends Document {
+@Schema({ timestamps: true, discriminatorKey: 'kind', collection: 'finance' })
+export class Finance extends Document {
   @Prop({ required: true })
   amount: number;
 
@@ -34,26 +37,44 @@ export class Transaction extends Document {
   @Prop()
   description: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Member' })
-  member: Types.ObjectId; // For tithes/offerings
-
   @Prop({ type: Types.ObjectId, ref: 'Church', required: true })
   church: Types.ObjectId;
 
-  // Additional fields for tithes
+  @Prop({ default: false })
+  isDeleted: boolean;
+}
+
+export const FinanceSchema = SchemaFactory.createForClass(Finance);
+
+// --- Tithe Discriminator ---
+@Schema()
+export class Tithe {
+  @Prop({ type: Types.ObjectId, ref: 'Member', required: true })
+  member: Types.ObjectId;
+
   @Prop({ enum: ['CASH', 'TRANSFER', 'CHECK'], default: 'CASH' })
   method: string;
+}
+export const TitheSchema = SchemaFactory.createForClass(Tithe);
 
-  // Additional fields for offerings
+// --- Offering Discriminator ---
+@Schema()
+export class Offering {
   @Prop({ enum: ['GENERAL', 'MISSION', 'CONSTRUCTION', 'SPECIAL'], default: 'GENERAL' })
   type: string;
 
-  // Additional fields for expenses
-  @Prop()
+  @Prop({ type: Types.ObjectId, ref: 'Member' })
+  member: Types.ObjectId; // Optional for offerings
+}
+export const OfferingSchema = SchemaFactory.createForClass(Offering);
+
+// --- Expense Discriminator ---
+@Schema()
+export class Expense {
+  @Prop({ required: true })
   recipient: string;
 
   @Prop()
   referenceNumber: string;
 }
-
-export const TransactionSchema = SchemaFactory.createForClass(Transaction);
+export const ExpenseSchema = SchemaFactory.createForClass(Expense);

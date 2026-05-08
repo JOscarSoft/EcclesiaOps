@@ -25,6 +25,9 @@ export class Activity extends Document {
 
   @Prop({ type: Types.ObjectId, ref: 'Church' })
   church: Types.ObjectId; // Si es null, es un evento de concilio
+
+  @Prop({ default: true })
+  isActive: boolean;
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);
