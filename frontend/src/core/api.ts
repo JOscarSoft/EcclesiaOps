@@ -8,16 +8,16 @@ export const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token;
-    const councilId = localStorage.getItem('last_council_id');
-    
+    const councilId = useAuthStore.getState().tenantId;
+
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     if (councilId) {
-      config.headers['x-council-id'] = councilId;
+      config.headers['x-tenant-id'] = councilId;
     }
-    
+
     return config;
   },
   (error) => Promise.reject(error)
