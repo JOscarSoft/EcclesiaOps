@@ -1,0 +1,15 @@
+{
+  "name": "ecclesiaops-monorepo",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces"
+  },
+  "dependencies": {
+    "@nestjs/mongoose": "^10.0.0",
+    "mongoose": "^8.0.0"
+  }
+}
