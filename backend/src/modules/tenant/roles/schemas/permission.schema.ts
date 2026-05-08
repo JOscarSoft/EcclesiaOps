@@ -1,14 +1,13 @@
-import { Prop, Schema } from '@nestjs/mongoose/dist/decorators';
-import { SchemaFactory } from '@nestjs/mongoose/dist/factories';
+import * as MongooseModule from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+@MongooseModule.Schema()
 export class Permission extends Document {
-  @Prop({ required: true, unique: true })
+  @MongooseModule.Prop({ required: true, unique: true })
   name: string; // e.g. MANAGE_MEMBERS, MANAGE_FINANCE
 
-  @Prop()
+  @MongooseModule.Prop()
   description: string;
 }
 
-export const PermissionSchema = SchemaFactory.createForClass(Permission);
+export const PermissionSchema = MongooseModule.SchemaFactory.createForClass(Permission);

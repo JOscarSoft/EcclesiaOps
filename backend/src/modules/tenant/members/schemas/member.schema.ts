@@ -1,5 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose/dist/decorators';
-import { SchemaFactory } from '@nestjs/mongoose/dist/factories';
+import * as MongooseModule from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
 export enum Gender {
@@ -13,61 +12,61 @@ export enum MemberStatus {
   VISITOR = 'VISITOR',
 }
 
-@Schema({ timestamps: true, collection: 'members' })
+@MongooseModule.Schema({ timestamps: true, collection: 'members' })
 export class Member extends Document {
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   firstName: string;
 
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   lastName: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   birthDate: Date;
 
-  @Prop({ type: String, enum: Gender })
+  @MongooseModule.Prop({ type: String, enum: Gender })
   gender: Gender;
 
-  @Prop({ type: String, enum: MemberStatus, default: MemberStatus.ACTIVE })
+  @MongooseModule.Prop({ type: String, enum: MemberStatus, default: MemberStatus.ACTIVE })
   status: MemberStatus;
 
-  @Prop({ default: false })
+  @MongooseModule.Prop({ default: false })
   baptized: boolean;
 
-  @Prop()
+  @MongooseModule.Prop()
   baptismDate: Date;
 
-  @Prop()
+  @MongooseModule.Prop()
   joinDate: Date;
 
-  @Prop()
+  @MongooseModule.Prop()
   phone: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   email: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   address: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Church' })
+  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Church' })
   church: Types.ObjectId;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Ministry' }], default: [] })
+  @MongooseModule.Prop({ type: [{ type: Types.ObjectId, ref: 'Ministry' }], default: [] })
   ministries: Types.ObjectId[];
 
-  @Prop()
+  @MongooseModule.Prop()
   familyGroup: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   notes: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   photoUrl: string;
 
-  @Prop({ default: true })
+  @MongooseModule.Prop({ default: true })
   isActive: boolean;
 }
 
-export const MemberSchema = SchemaFactory.createForClass(Member);
+export const MemberSchema = MongooseModule.SchemaFactory.createForClass(Member);
 
 // Virtual: age
 MemberSchema.virtual('age').get(function () {

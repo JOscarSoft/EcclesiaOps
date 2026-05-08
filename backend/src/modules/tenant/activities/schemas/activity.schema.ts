@@ -1,32 +1,31 @@
-import { Prop, Schema } from '@nestjs/mongoose/dist/decorators';
-import { SchemaFactory } from '@nestjs/mongoose/dist/factories';
+import * as MongooseModule from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-@Schema({ timestamps: true })
+@MongooseModule.Schema({ timestamps: true })
 export class Activity extends Document {
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   title: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   description: string;
 
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   startDate: Date;
 
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   endDate: Date;
 
-  @Prop()
+  @MongooseModule.Prop()
   location: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'ActivityType', required: true })
+  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'ActivityType', required: true })
   activityType: Types.ObjectId;
 
-  @Prop({ type: Types.ObjectId, ref: 'Church' })
+  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Church' })
   church: Types.ObjectId; // Si es null, es un evento de concilio
 
-  @Prop({ default: true })
+  @MongooseModule.Prop({ default: true })
   isActive: boolean;
 }
 
-export const ActivitySchema = SchemaFactory.createForClass(Activity);
+export const ActivitySchema = MongooseModule.SchemaFactory.createForClass(Activity);

@@ -1,23 +1,22 @@
-import { Prop, Schema } from '@nestjs/mongoose/dist/decorators';
-import { SchemaFactory } from '@nestjs/mongoose/dist/factories';
+import * as MongooseModule from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema({ timestamps: true })
+@MongooseModule.Schema({ timestamps: true })
 export class Church extends Document {
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   name: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   address: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   phone: string;
 
-  @Prop()
+  @MongooseModule.Prop()
   email: string;
 
-  @Prop({ default: true })
+  @MongooseModule.Prop({ default: true })
   isActive: boolean;
 }
 
-export const ChurchSchema = SchemaFactory.createForClass(Church);
+export const ChurchSchema = MongooseModule.SchemaFactory.createForClass(Church);

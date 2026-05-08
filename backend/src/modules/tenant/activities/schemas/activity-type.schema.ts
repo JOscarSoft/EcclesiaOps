@@ -1,20 +1,19 @@
-import { Prop, Schema } from '@nestjs/mongoose/dist/decorators';
-import { SchemaFactory } from '@nestjs/mongoose/dist/factories';
+import * as MongooseModule from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
-@Schema({ timestamps: true })
+@MongooseModule.Schema({ timestamps: true })
 export class ActivityType extends Document {
-  @Prop({ required: true })
+  @MongooseModule.Prop({ required: true })
   name: string;
 
-  @Prop({ default: '#2196f3' })
+  @MongooseModule.Prop({ default: '#2196f3' })
   color: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Council' })
+  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Council' })
   council: Types.ObjectId;
 
-  @Prop({ default: true })
+  @MongooseModule.Prop({ default: true })
   isActive: boolean;
 }
 
-export const ActivityTypeSchema = SchemaFactory.createForClass(ActivityType);
+export const ActivityTypeSchema = MongooseModule.SchemaFactory.createForClass(ActivityType);
