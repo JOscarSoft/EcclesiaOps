@@ -1,24 +1,14 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "dist" }
+  "experimentalServices": {
+    "frontend": {
+      "entrypoint": "frontend",
+      "routePrefix": "/",
+      "framework": "vite"
     },
-    {
-      "src": "backend/src/main.ts",
-      "use": "@vercel/node"
+    "backend": {
+      "entrypoint": "backend",
+      "routePrefix": "/api",
+      "framework": "nestjs"
     }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "backend/src/main.ts"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "frontend/$1"
-    }
-  ]
+  }
 }
