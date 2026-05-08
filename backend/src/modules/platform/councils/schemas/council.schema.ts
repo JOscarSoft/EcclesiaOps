@@ -1,16 +1,14 @@
-import * as MongooseModule from '@nestjs/mongoose';
+import { Schema } from 'mongoose';
 import { Document } from 'mongoose';
 
-@MongooseModule.Schema({ timestamps: true })
 export class Council extends Document {
-  @MongooseModule.Prop({ required: true })
   name: string;
-
-  @MongooseModule.Prop({ required: true, unique: true })
-  domain: string; // Used to identify the tenant uniquely (e.g. for x-tenant-id)
-
-  @MongooseModule.Prop({ default: true })
+  domain: string;
   isActive: boolean;
 }
 
-export const CouncilSchema = MongooseModule.SchemaFactory.createForClass(Council);
+export const CouncilSchema = new Schema({
+  name: { type: String, required: true },
+  domain: { type: String, required: true, unique: true },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });

@@ -1,28 +1,22 @@
-import * as MongooseModule from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Schema, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
-@MongooseModule.Schema({ timestamps: true })
 export class User extends Document {
-  @MongooseModule.Prop({ required: true })
   firstName: string;
-
-  @MongooseModule.Prop({ required: true })
   lastName: string;
-
-  @MongooseModule.Prop({ required: true, unique: true })
   email: string;
-
-  @MongooseModule.Prop({ required: true })
   passwordHash: string;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Role', required: true })
   role: Types.ObjectId;
-
-  @MongooseModule.Prop({ type: Types.ObjectId, ref: 'Church' })
-  church: Types.ObjectId; // Si es null, es usuario de concilio
-
-  @MongooseModule.Prop({ default: true })
+  church: Types.ObjectId;
   isActive: boolean;
 }
 
-export const UserSchema = MongooseModule.SchemaFactory.createForClass(User);
+export const UserSchema = new Schema({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  passwordHash: { type: String, required: true },
+  role: { type: Schema.Types.ObjectId, ref: 'Role', required: true },
+  church: { type: Schema.Types.ObjectId, ref: 'Church' },
+  isActive: { type: Boolean, default: true },
+}, { timestamps: true });

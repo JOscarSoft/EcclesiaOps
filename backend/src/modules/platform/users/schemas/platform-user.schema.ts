@@ -1,16 +1,14 @@
-import * as MongooseModule from '@nestjs/mongoose';
+import { Schema } from 'mongoose';
 import { Document } from 'mongoose';
 
-@MongooseModule.Schema({ timestamps: true })
 export class PlatformUser extends Document {
-  @MongooseModule.Prop({ required: true, unique: true })
   email: string;
-
-  @MongooseModule.Prop({ required: true })
   passwordHash: string;
-
-  @MongooseModule.Prop({ required: true })
   name: string;
 }
 
-export const PlatformUserSchema = MongooseModule.SchemaFactory.createForClass(PlatformUser);
+export const PlatformUserSchema = new Schema({
+  email: { type: String, required: true, unique: true },
+  passwordHash: { type: String, required: true },
+  name: { type: String, required: true },
+}, { timestamps: true });
