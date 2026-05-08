@@ -22,6 +22,9 @@ export const Login = () => {
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      tenantId: localStorage.getItem('ecclesia_last_tenant') || '',
+    }
   });
   const setAuth = useAuthStore((state) => state.setAuth);
   const navigate = useNavigate();
@@ -46,6 +49,9 @@ export const Login = () => {
       return { token: response.data.access_token, tenantId: data.tenantId || '', user: tokenPayload };
     },
     onSuccess: (data) => {
+      if (data.tenantId) {
+        localStorage.setItem('ecclesia_last_tenant', data.tenantId);
+      }
       setAuth(data.token, data.tenantId, data.user);
       navigate('/');
     },
