@@ -1,7 +1,5 @@
-import * as NestMongoose from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
-
-const { Prop, Schema, SchemaFactory } = NestMongoose;
 
 @Schema()
 export class Permission extends Document {
