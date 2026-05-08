@@ -1,12 +1,11 @@
 import {
   Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField,
-  List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Stack, Box
+  List, ListItem, ListItemText, Stack, Box
 } from '@mui/material';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
 export const ActivityTypeDialog = ({ open, onClose }: { open: boolean; onClose: () => void }) => {

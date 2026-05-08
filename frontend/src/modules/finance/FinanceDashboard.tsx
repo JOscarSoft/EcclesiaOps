@@ -31,7 +31,7 @@ export const FinanceDashboard = () => {
 
   const SummaryCard = ({ title, amount, icon, color }: any) => (
     <Paper elevation={0} sx={{ p: 3, borderRadius: 3, border: '1px solid', borderColor: 'divider', height: '100%' }}>
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
         <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: `${color}.50`, color: `${color}.main`, display: 'flex' }}>
           {icon}
         </Box>
@@ -53,7 +53,7 @@ export const FinanceDashboard = () => {
       <Typography variant="h4" sx={{ fontWeight: 800, mb: 4 }}>{t('finance.dashboard')}</Typography>
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <SummaryCard 
             title={t('finance.income')} 
             amount={balance?.totalIncome || 0} 
@@ -61,7 +61,7 @@ export const FinanceDashboard = () => {
             color="success" 
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <SummaryCard 
             title={t('finance.expense')} 
             amount={balance?.expenses || 0} 
@@ -69,7 +69,7 @@ export const FinanceDashboard = () => {
             color="error" 
           />
         </Grid>
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <SummaryCard 
             title={t('finance.balance')} 
             amount={balance?.netBalance || 0} 

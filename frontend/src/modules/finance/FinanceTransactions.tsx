@@ -1,10 +1,9 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Chip, IconButton, Tooltip, Stack, TextField, Button } from '@mui/material';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Tooltip, Stack, TextField, Button } from '@mui/material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { useState } from 'react';
 
 export const FinanceTransactions = () => {
@@ -56,7 +55,7 @@ export const FinanceTransactions = () => {
 
   return (
     <Box>
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }} alignItems="center">
+      <Stack direction="row" spacing={2} sx={{ mb: 3, alignItems: 'center' }}>
         <TextField
           label="Desde"
           type="date"
@@ -115,7 +114,7 @@ export const FinanceTransactions = () => {
                     label={transaction.kind === 'Expense' ? 'Egreso' : 'Ingreso'} 
                     size="small"
                     color={transaction.kind === 'Expense' ? 'error' : 'success'}
-                    variant="soft"
+                    variant="filled"
                   />
                 </TableCell>
                 <TableCell sx={{ fontWeight: 600 }}>{formatCurrency(transaction.amount)}</TableCell>

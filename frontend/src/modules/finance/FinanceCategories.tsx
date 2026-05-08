@@ -1,9 +1,8 @@
-import { Box, Button, TextField, MenuItem, Paper, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Typography, Stack } from '@mui/material';
+import { Box, Button, TextField, MenuItem, Paper, List, ListItem, ListItemText, Typography, Stack } from '@mui/material';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
 export const FinanceCategories = () => {

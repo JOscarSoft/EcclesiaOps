@@ -170,7 +170,7 @@ export const ExecutiveDashboard = () => {
   return (
     <Box component="main">
       <SEO title={t('analytics.title')} />
-      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', sx: { alignItems: 'center' } }}>
         <Box>
           <Typography variant="h4" sx={{ fontWeight: 800 }}>{t('analytics.title')}</Typography>
           <Typography color="text.secondary">{t('analytics.subtitle')}</Typography>
@@ -189,9 +189,9 @@ export const ExecutiveDashboard = () => {
 
       {/* KPI Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Paper sx={{ p: 3, borderRadius: 4, position: 'relative' }}>
-            <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
               <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'primary.light', color: 'primary.main' }}>
                 <GroupsIcon />
               </Box>
@@ -209,9 +209,9 @@ export const ExecutiveDashboard = () => {
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Paper sx={{ p: 3, borderRadius: 4, position: 'relative' }}>
-            <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
               <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'success.light', color: 'success.main' }}>
                 <TrendingUpIcon />
               </Box>
@@ -229,9 +229,9 @@ export const ExecutiveDashboard = () => {
             </Box>
           </Paper>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <Paper sx={{ p: 3, borderRadius: 4, position: 'relative' }}>
-            <Stack direction="row" spacing={2} alignItems="center">
+            <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
               <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'error.light', color: 'error.main' }}>
                 <AccountBalanceWalletIcon />
               </Box>
@@ -253,9 +253,9 @@ export const ExecutiveDashboard = () => {
 
       <Grid container spacing={3}>
         {/* Finance Trends */}
-        <Grid item xs={12} md={8}>
+        <Grid size={{ xs: 12, md: 8 }}>
           <Paper sx={{ p: 3, borderRadius: 4 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('analytics.financialTrend')}</Typography>
               <IconButton size="small" onClick={() => exportToCSV(trendData, 'tendencia_financiera')}>
                 <DownloadIcon fontSize="small" />
@@ -277,7 +277,7 @@ export const ExecutiveDashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="name" />
                   <YAxis tickFormatter={(val) => `$${val/1000}k`} />
-                  <Tooltip formatter={(val: number) => formatCurrency(val)} />
+                  <Tooltip formatter={(val: any) => formatCurrency(Number(val))} />
                   <Legend />
                   <Area type="monotone" dataKey="income" stroke="#82ca9d" fillOpacity={1} fill="url(#colorIncome)" name={t('finance.income')} />
                   <Area type="monotone" dataKey="expenses" stroke="#8884d8" fillOpacity={1} fill="url(#colorExpenses)" name={t('finance.expense')} />
@@ -288,9 +288,9 @@ export const ExecutiveDashboard = () => {
         </Grid>
 
         {/* Demographics */}
-        <Grid item xs={12} md={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <Paper sx={{ p: 3, borderRadius: 4, height: '100%' }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('analytics.genderDistribution')}</Typography>
               <IconButton size="small" onClick={() => exportToCSV(genderData, 'demografia_genero')}>
                 <DownloadIcon fontSize="small" />
@@ -306,7 +306,7 @@ export const ExecutiveDashboard = () => {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {genderData.map((entry: any, index: number) => (
+                    {genderData.map((_entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -319,9 +319,9 @@ export const ExecutiveDashboard = () => {
         </Grid>
 
         {/* Categories Bar Chart */}
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Paper sx={{ p: 3, borderRadius: 4 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+            <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
               <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('analytics.categoryDistribution')}</Typography>
               <Stack direction="row" spacing={1}>
                 <IconButton size="small" onClick={() => exportToCSV(categoryData, 'detalle_categorias')}>
@@ -336,7 +336,7 @@ export const ExecutiveDashboard = () => {
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} />
                   <XAxis type="number" hide />
                   <YAxis dataKey="name" type="category" width={100} />
-                  <Tooltip formatter={(val: number) => formatCurrency(val)} />
+                  <Tooltip formatter={(val: any) => formatCurrency(Number(val))} />
                   <Bar dataKey="value" radius={[0, 4, 4, 0]}>
                     {categoryData.map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.type === 'Expense' ? '#FF8042' : '#00C49F'} />
@@ -350,9 +350,9 @@ export const ExecutiveDashboard = () => {
 
         {/* Church Breakdown (Council Only) */}
         {isCouncil && (
-          <Grid item xs={12} md={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Paper sx={{ p: 3, borderRadius: 4 }}>
-              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+              <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('analytics.churchPerformance')}</Typography>
                 <Stack direction="row" spacing={1}>
                   <IconButton size="small" onClick={() => exportToCSV(churches, 'detalle_iglesias')}>
@@ -367,7 +367,7 @@ export const ExecutiveDashboard = () => {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="_id" />
                     <YAxis />
-                    <Tooltip formatter={(val: number) => formatCurrency(val)} />
+                    <Tooltip formatter={(val: any) => formatCurrency(Number(val))} />
                     <Legend />
                     <Bar dataKey="income" fill="#82ca9d" name={t('finance.income')} radius={[4, 4, 0, 0]} />
                     <Bar dataKey="expenses" fill="#8884d8" name={t('finance.expense')} radius={[4, 4, 0, 0]} />
@@ -379,7 +379,7 @@ export const ExecutiveDashboard = () => {
         )}
 
         {/* Growth Bar Chart */}
-        <Grid item xs={12}>
+        <Grid size={{ xs: 12 }}>
           <Paper sx={{ p: 3, borderRadius: 4 }}>
             <Typography variant="h6" sx={{ fontWeight: 700, mb: 3 }}>{t('analytics.membershipGrowth')}</Typography>
             <Box sx={{ height: 250 }}>

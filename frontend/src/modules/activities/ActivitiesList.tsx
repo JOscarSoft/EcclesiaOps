@@ -64,7 +64,7 @@ export const ActivitiesList = () => {
     <Box>
       <Box sx={{ mb: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Stack direction="row" spacing={1.5} alignItems="center">
+          <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
             <CalendarMonthIcon color="primary" sx={{ fontSize: 32 }} />
             <Typography variant="h4" sx={{ fontWeight: 800 }}>{t('activities.title')}</Typography>
           </Stack>
@@ -84,7 +84,7 @@ export const ActivitiesList = () => {
 
         {/* Date Range Filters */}
         <Paper sx={{ p: 2, borderRadius: 3, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
             <FilterListIcon color="action" />
             <Typography variant="body2" sx={{ fontWeight: 700, mr: 1 }}>Filtros:</Typography>
           </Stack>
@@ -125,7 +125,7 @@ export const ActivitiesList = () => {
       ) : (
         <Grid container spacing={3}>
           {activities.map((activity: any) => (
-            <Grid item xs={12} md={6} lg={4} key={activity._id}>
+            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={activity._id}>
               <Card 
                 onClick={() => canManage && handleEdit(activity)}
                 sx={{ 
@@ -137,11 +137,11 @@ export const ActivitiesList = () => {
                 }}
               >
                 <CardContent sx={{ p: 3 }}>
-                  <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 2 }}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
                     <Chip 
                       label={activity.activityType?.name || 'Evento'} 
                       size="small" 
-                      variant="soft" 
+                      variant="filled" 
                       sx={{ fontWeight: 700, bgcolor: activity.activityType?.color || 'primary.light' }}
                     />
                     {!activity.church && (
@@ -172,20 +172,20 @@ export const ActivitiesList = () => {
                   <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>{activity.description}</Typography>
                   
                   <Stack spacing={1.5}>
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                       <CalendarMonthIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
                       <Typography variant="body2" sx={{ fontWeight: 500 }}>
                         {new Date(activity.startDate).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
                       </Typography>
                     </Stack>
-                    <Stack direction="row" spacing={1} alignItems="center">
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                       {activity.church ? <ChurchIcon sx={{ fontSize: 18, color: 'text.secondary' }} /> : <BusinessIcon sx={{ fontSize: 18, color: 'text.secondary' }} />}
                       <Typography variant="body2" color="text.secondary">
                         {activity.church?.name || t('activities.councilEvent')}
                       </Typography>
                     </Stack>
                     {activity.location && (
-                      <Stack direction="row" spacing={1} alignItems="center">
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
                         <LocationOnIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
                         <Typography variant="body2">{activity.location}</Typography>
                       </Stack>

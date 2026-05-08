@@ -84,7 +84,7 @@ export const MinistriesList = () => {
       <SEO title={t('ministries.title')} />
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Stack direction="row" spacing={1.5} alignItems="center">
+        <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
           <GroupsIcon color="primary" />
           <Typography variant="h5" sx={{ fontWeight: 700 }}>{t('ministries.title')}</Typography>
         </Stack>

@@ -1,4 +1,4 @@
-import { Box, Typography, Grid, Paper, Stack, CircularProgress } from '@mui/material';
+import { Box, Typography, Grid, Paper, CircularProgress } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 import { useQuery } from '@tanstack/react-query';
@@ -40,17 +40,17 @@ export const Dashboard = () => {
       <Grid container spacing={3}>
         {/* Calendar - Only for tenant users, not for SuperAdmin (for now) */}
         {!isSuperAdmin && (
-          <Grid item xs={12} md={4}>
+          <Grid size={{ xs: 12, md: 4 }}>
             <DashboardCalendar />
           </Grid>
         )}
         
         {/* Quick Stats */}
-        <Grid item xs={12} md={isSuperAdmin ? 12 : 8}>
+        <Grid size={{ xs: 12, md: isSuperAdmin ? 12 : 8 }}>
           <Grid container spacing={3}>
             {isSuperAdmin ? (
               <>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Paper sx={{ p: 3, borderRadius: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'primary.light', color: 'primary.main' }}>
                       <BusinessIcon />
@@ -63,7 +63,7 @@ export const Dashboard = () => {
                     </Box>
                   </Paper>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Paper sx={{ p: 3, borderRadius: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'success.light', color: 'success.main' }}>
                       <ChurchIcon />
@@ -79,7 +79,7 @@ export const Dashboard = () => {
               </>
             ) : (
               <>
-                <Grid item xs={12} sm={isCouncil ? 6 : 12}>
+                <Grid size={{ xs: 12, sm: isCouncil ? 6 : 12 }}>
                   <Paper sx={{ p: 3, borderRadius: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                     <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'primary.light', color: 'primary.main' }}>
                       <GroupsIcon />
@@ -94,7 +94,7 @@ export const Dashboard = () => {
                 </Grid>
 
                 {isCouncil && (
-                  <Grid item xs={12} sm={6}>
+                  <Grid size={{ xs: 12, sm: 6 }}>
                     <Paper sx={{ p: 3, borderRadius: 4, display: 'flex', alignItems: 'center', gap: 2 }}>
                       <Box sx={{ p: 1.5, borderRadius: 3, bgcolor: 'success.light', color: 'success.main' }}>
                         <ChurchIcon />

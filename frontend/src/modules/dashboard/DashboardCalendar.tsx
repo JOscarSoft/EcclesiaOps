@@ -43,7 +43,7 @@ export const DashboardCalendar = () => {
 
   return (
     <Paper elevation={0} sx={{ p: 3, borderRadius: 4, border: '1px solid', borderColor: 'divider' }}>
-      <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 3 }}>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 3 }}>
         <EventIcon color="primary" />
         <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('activities.title')}</Typography>
       </Stack>
@@ -71,7 +71,7 @@ export const DashboardCalendar = () => {
                       '&:hover': { bgcolor: 'action.hover' }
                     }}
                   >
-                    <Stack direction="row" spacing={2} alignItems="center">
+                    <Stack direction="row" spacing={2} sx={{ alignItems: 'center' }}>
                       <Box sx={{ 
                         textAlign: 'center', 
                         minWidth: 50, 
@@ -92,7 +92,7 @@ export const DashboardCalendar = () => {
                         <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
                           {activity.title}
                         </Typography>
-                        <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5 }}>
+                        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mt: 0.5 }}>
                           <Typography variant="caption" color="text.secondary">
                             {new Date(activity.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </Typography>
