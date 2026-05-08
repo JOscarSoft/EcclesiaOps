@@ -1,80 +1,59 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Schema as MongooseSchema } from 'mongoose';
+import * as NestMongoose from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
 
-// --- CATEGORIES ---
+const { Prop, Schema, SchemaFactory } = NestMongoose;
+
 @Schema({ timestamps: true })
 export class FinanceCategory extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ enum: ['INCOME', 'EXPENSE'], required: true })
+  @Prop({ required: true, enum: ['INCOME', 'EXPENSE'] })
   type: string;
 
-  @Prop({ default: true })
-  isActive: boolean;
-
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Church' })
-  church: any;
-
-  @Prop({ default: false })
-  isDeleted: boolean;
+  @Prop({ type: Types.ObjectId, ref: 'Church' })
+  church: Types.ObjectId;
 }
+
 export const FinanceCategorySchema = SchemaFactory.createForClass(FinanceCategory);
 
-// --- FINANCE (BASE) ---
-@Schema({ timestamps: true, discriminatorKey: 'kind', collection: 'transactions' })
-export class Finance extends Document {
-  kind: string;
-
+@Schema({ timestamps: true })
+export class Transaction extends Document {
   @Prop({ required: true })
   amount: number;
 
-  @Prop({ required: true, default: Date.now })
+  @Prop({ required: true })
   date: Date;
+
+  @Prop({ type: Types.ObjectId, ref: 'FinanceCategory', required: true })
+  category: Types.ObjectId;
+
+  @Prop({ enum: ['Tithe', 'Offering', 'Expense'], required: true })
+  kind: string;
 
   @Prop()
   description: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'FinanceCategory', required: true })
-  category: any;
+  @Prop({ type: Types.ObjectId, ref: 'Member' })
+  member: Types.ObjectId; // For tithes/offerings
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Church', required: false })
-  church: any;
+  @Prop({ type: Types.ObjectId, ref: 'Church', required: true })
+  church: Types.ObjectId;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true })
-  createdBy: any;
-
-  @Prop({ default: false })
-  isDeleted: boolean;
-}
-export const FinanceSchema = SchemaFactory.createForClass(Finance);
-
-// --- TITHE (Ingreso por Miembro) ---
-@Schema()
-export class Tithe {
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Member', required: true })
-  member: any;
-  
+  // Additional fields for tithes
   @Prop({ enum: ['CASH', 'TRANSFER', 'CHECK'], default: 'CASH' })
   method: string;
-}
-export const TitheSchema = SchemaFactory.createForClass(Tithe);
 
-// --- OFFERING (Ingreso General) ---
-@Schema()
-export class Offering {
+  // Additional fields for offerings
   @Prop({ enum: ['GENERAL', 'MISSION', 'CONSTRUCTION', 'SPECIAL'], default: 'GENERAL' })
   type: string;
-}
-export const OfferingSchema = SchemaFactory.createForClass(Offering);
 
-// --- EXPENSE ---
-@Schema()
-export class Expense {
+  // Additional fields for expenses
   @Prop()
-  referenceNumber: string; // Número de factura o recibo
-  
+  recipient: string;
+
   @Prop()
-  recipient: string; // A quién se le pagó
+  referenceNumber: string;
 }
-export const ExpenseSchema = SchemaFactory.createForClass(Expense);
+
+export const TransactionSchema = SchemaFactory.createForClass(Transaction);

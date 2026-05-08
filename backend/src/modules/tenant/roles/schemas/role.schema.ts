@@ -1,12 +1,14 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as NestMongoose from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+
+const { Prop, Schema, SchemaFactory } = NestMongoose;
 
 @Schema({ timestamps: true })
 export class Role extends Document {
-  @Prop({ required: true, unique: true })
-  name: string; // e.g., 'ADMIN', 'PASTOR', 'SECRETARY'
+  @Prop({ required: true })
+  name: string; // e.g. ADMIN, SECRETARY, TREASURER
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Permission' }] })
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Permission' }], default: [] })
   permissions: Types.ObjectId[];
 }
 

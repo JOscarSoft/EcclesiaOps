@@ -1,29 +1,28 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as NestMongoose from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+
+const { Prop, Schema, SchemaFactory } = NestMongoose;
 
 @Schema({ timestamps: true })
 export class User extends Document {
-  @Prop({ required: true, unique: true })
-  email: string;
-
-  @Prop({ required: true })
-  passwordHash: string;
-
   @Prop({ required: true })
   firstName: string;
 
   @Prop({ required: true })
   lastName: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'Role' })
+  @Prop({ required: true, unique: true })
+  email: string;
+
+  @Prop({ required: true })
+  passwordHash: string;
+
+  @Prop({ type: Types.ObjectId, ref: 'Role', required: true })
   role: Types.ObjectId;
 
   @Prop({ type: Types.ObjectId, ref: 'Church' })
-  church: Types.ObjectId;
+  church: Types.ObjectId; // Si es null, es usuario de concilio
 
-  @Prop()
-  refreshTokenHash: string;
-  
   @Prop({ default: true })
   isActive: boolean;
 }

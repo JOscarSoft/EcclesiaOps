@@ -1,5 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as NestMongoose from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+
+const { Prop, Schema, SchemaFactory } = NestMongoose;
 
 @Schema({ timestamps: true })
 export class PlatformUser extends Document {

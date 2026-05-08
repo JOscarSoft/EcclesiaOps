@@ -1,16 +1,18 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import * as NestMongoose from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+
+const { Prop, Schema, SchemaFactory } = NestMongoose;
 
 @Schema({ timestamps: true })
 export class ActivityType extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop()
-  color: string; // Para identificar en el calendario
+  @Prop({ default: '#2196f3' })
+  color: string;
 
-  @Prop({ default: true })
-  isActive: boolean;
+  @Prop({ type: Types.ObjectId, ref: 'Council' })
+  council: Types.ObjectId;
 }
 
 export const ActivityTypeSchema = SchemaFactory.createForClass(ActivityType);

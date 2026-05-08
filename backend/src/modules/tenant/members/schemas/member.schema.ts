@@ -1,5 +1,7 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import * as NestMongoose from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+
+const { Prop, Schema, SchemaFactory } = NestMongoose;
 
 export enum Gender {
   MALE = 'MALE',
