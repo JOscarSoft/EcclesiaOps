@@ -1,5 +1,6 @@
 services:
   - type: web
+    plan: free 
     name: ecclesiaops-backend
     runtime: node
     repo: https://github.com/JOscarSoft/EcclesiaOps
@@ -17,6 +18,7 @@ services:
         sync: false
 
   - type: web
+    plan: free 
     name: ecclesiaops-frontend
     runtime: node
     repo: https://github.com/JOscarSoft/EcclesiaOps
