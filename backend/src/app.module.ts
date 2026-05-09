@@ -12,6 +12,7 @@ import { FinanceModule } from './modules/tenant/finance/finance.module';
 import { ActivitiesModule } from './modules/tenant/activities/activities.module';
 import { StatsModule } from './modules/tenant/stats/stats.module';
 import { TenantMiddleware } from './modules/tenants/tenant.middleware';
+import { PlatformUsersModule } from './modules/platform/users/users.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TenantMiddleware } from './modules/tenants/tenant.middleware';
     FinanceModule,
     ActivitiesModule,
     StatsModule,
+    PlatformUsersModule,
   ],
   controllers: [],
   providers: [],

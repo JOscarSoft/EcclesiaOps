@@ -15,17 +15,17 @@ export class AuthService {
   constructor(
     @InjectModel(PlatformUser.name) private platformUserModel: Model<PlatformUser>,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async platformLogin(email: string, passwordRaw: string) {
     const user = await this.platformUserModel.findOne({ email });
-    if (!user) throw new UnauthorizedException('Credenciales inválidas');
+    if (!user) throw new UnauthorizedException('Credenciales inválidas!!!');
 
     const isValid = await bcrypt.compare(passwordRaw, user.passwordHash);
     if (!isValid) throw new UnauthorizedException('Credenciales inválidas');
 
     const payload = { email: user.email, sub: user._id, type: 'platform', role: 'SUPER_ADMIN' };
-    
+
     return {
       access_token: this.jwtService.sign(payload),
       refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }), // Simplified for MVP
@@ -36,10 +36,10 @@ export class AuthService {
     // Dynamic connection to verify user
     const baseUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/platform_db';
     const uriParts = baseUri.split('/');
-    const lastPart = uriParts.pop(); 
+    const lastPart = uriParts.pop();
     const queryParams = lastPart?.includes('?') ? '?' + lastPart.split('?')[1] : '';
     const tenantUri = [...uriParts, `tenant_${tenantId}${queryParams}`].join('/');
-    
+
     const connection = mongoose.createConnection(tenantUri);
     const UserModel = connection.model<User>(User.name, UserSchema);
     const RoleModel = connection.model<Role>(Role.name, RoleSchema);
@@ -53,7 +53,7 @@ export class AuthService {
         model: PermissionModel
       }
     });
-    
+
     if (!user || !user.isActive) {
       await connection.close();
       throw new UnauthorizedException('Credenciales inválidas o usuario inactivo');
@@ -69,10 +69,10 @@ export class AuthService {
     const roleName = roleObj?.name || 'USER';
     const permissions = roleObj?.permissions?.map((p: any) => p.name) || [];
 
-    const payload = { 
-      email: user.email, 
-      sub: user._id, 
-      type: 'tenant', 
+    const payload = {
+      email: user.email,
+      sub: user._id,
+      type: 'tenant',
       tenantId,
       churchId: (user as any).church,
       role: roleName,
