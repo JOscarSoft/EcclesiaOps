@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: ecclesiaops-backend
+    runtime: node
+    repo: https://github.com/JOscarSoft/EcclesiaOps
+    branch: master
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/main
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: web
+    name: ecclesiaops-frontend
+    runtime: node
+    repo: https://github.com/JOscarSoft/EcclesiaOps
+    branch: master
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s dist -l 3000
+    envVars:
+      - key: VITE_API_URL
+        value: https://ecclesiaops-backend.onrender.com/api
