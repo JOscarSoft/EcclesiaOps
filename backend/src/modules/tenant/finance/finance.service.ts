@@ -65,24 +65,22 @@ export class FinanceService {
 
     const transactions = await this.financeModel.find(query).exec();
 
-    const tithes = transactions.filter(t => t.kind === 'Tithe').reduce((acc, curr) => acc + curr.amount, 0);
-    const offerings = transactions.filter(t => t.kind === 'Offering').reduce((acc, curr) => acc + curr.amount, 0);
+    const income = transactions.filter(t => t.kind === 'Income').reduce((acc, curr) => acc + curr.amount, 0);
     const expenses = transactions.filter(t => t.kind === 'Expense').reduce((acc, curr) => acc + curr.amount, 0);
 
     return {
-      tithes,
-      offerings,
+      income,
       expenses,
-      totalIncome: tithes + offerings,
-      netBalance: (tithes + offerings) - expenses
+      totalIncome: income,
+      netBalance: income - expenses
     };
   }
 
-  // Get member contributions (tithes + offerings only)
   async getMemberContributions(memberId: string) {
     const transactions = await this.financeModel.find({
       member: new Types.ObjectId(memberId),
       isDeleted: false,
+      kind: 'Income'
     })
       .populate('category', 'name type')
       .sort({ date: -1 })

@@ -9,11 +9,11 @@ export class ChurchesService {
   ) {}
 
   async findAll() {
-    return this.churchModel.find().exec();
+    return this.churchModel.find().populate('pastor', 'firstName lastName').exec();
   }
 
   async findOne(id: string) {
-    const church = await this.churchModel.findById(id).exec();
+    const church = await this.churchModel.findById(id).populate('pastor', 'firstName lastName').exec();
     if (!church) throw new NotFoundException('Iglesia no encontrada');
     return church;
   }
@@ -24,7 +24,7 @@ export class ChurchesService {
   }
 
   async update(id: string, data: any) {
-    const updatedChurch = await this.churchModel.findByIdAndUpdate(id, data, { new: true }).exec();
+    const updatedChurch = await this.churchModel.findByIdAndUpdate(id, data, { new: true }).populate('pastor', 'firstName lastName').exec();
     if (!updatedChurch) throw new NotFoundException('Iglesia no encontrada');
     return updatedChurch;
   }

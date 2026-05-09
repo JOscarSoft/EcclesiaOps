@@ -13,17 +13,19 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import ChurchIcon from '@mui/icons-material/Church';
 import BusinessIcon from '@mui/icons-material/Business';
 import { ActivityFormDialog } from './ActivityFormDialog';
+import { formatDateTime } from '../../utils/format';
+import { DateField } from '../../components/common/DateField';
 import { ActivityTypeDialog } from './ActivityTypeDialog';
 
 export const ActivitiesList = () => {
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const canManage = user?.role === 'SUPER_ADMIN' || user?.permissions?.includes('MANAGE_ACTIVITIES');
-  
+
   const [open, setOpen] = useState(false);
   const [openTypes, setOpenTypes] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
-  
+
   // Date filters
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -35,10 +37,10 @@ export const ActivitiesList = () => {
       const params = new URLSearchParams();
       if (fromDate) params.append('from', fromDate);
       if (toDate) params.append('to', toDate);
-      
+
       const queryString = params.toString();
       if (queryString) url += `?${queryString}`;
-      
+
       return (await api.get(url)).data;
     },
   });
@@ -57,8 +59,6 @@ export const ActivitiesList = () => {
     setSelectedActivity(null);
     setOpen(true);
   };
-
-  if (isLoading) return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}><CircularProgress /></Box>;
 
   return (
     <Box>
@@ -88,21 +88,17 @@ export const ActivitiesList = () => {
             <FilterListIcon color="action" />
             <Typography variant="body2" sx={{ fontWeight: 700, mr: 1 }}>Filtros:</Typography>
           </Stack>
-          <TextField 
-            label="Desde" 
-            type="date" 
-            size="small" 
-            value={fromDate} 
+          <DateField
+            label="Desde"
+            size="small"
+            value={fromDate}
             onChange={(e) => setFromDate(e.target.value)}
-            slotProps={{ inputLabel: { shrink: true } }} 
           />
-          <TextField 
-            label="Hasta" 
-            type="date" 
-            size="small" 
-            value={toDate} 
+          <DateField
+            label="Hasta"
+            size="small"
+            value={toDate}
             onChange={(e) => setToDate(e.target.value)}
-            slotProps={{ inputLabel: { shrink: true } }} 
           />
           {(fromDate || toDate) && (
             <Button size="small" onClick={() => { setFromDate(''); setToDate(''); }}>
@@ -118,91 +114,96 @@ export const ActivitiesList = () => {
         </Paper>
       </Box>
 
-      {activities.length === 0 ? (
-        <Paper sx={{ p: 10, textAlign: 'center', borderRadius: 4, bgcolor: 'transparent', border: '2px dashed', borderColor: 'divider' }}>
-          <Typography color="text.secondary">{t('activities.noActivities')}</Typography>
-        </Paper>
+      {isLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}><CircularProgress /></Box>
       ) : (
-        <Grid container spacing={3}>
-          {activities.map((activity: any) => (
-            <Grid size={{ xs: 12, md: 6, lg: 4 }} key={activity._id}>
-              <Card 
-                onClick={() => canManage && handleEdit(activity)}
-                sx={{ 
-                  borderRadius: 4, 
-                  height: '100%', 
-                  transition: '0.3s', 
-                  cursor: canManage ? 'pointer' : 'default',
-                  '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 } 
-                }}
-              >
-                <CardContent sx={{ p: 3 }}>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
-                    <Chip 
-                      label={activity.activityType?.name || 'Evento'} 
-                      size="small" 
-                      variant="filled" 
-                      sx={{ fontWeight: 700, bgcolor: activity.activityType?.color || 'primary.light' }}
-                    />
-                    {!activity.church && (
-                      <Chip 
-                        label={t('activities.councilEvent')} 
-                        size="small" 
-                        color="secondary" 
-                        variant="outlined" 
-                        sx={{ fontWeight: 700, fontSize: 10 }}
+
+        activities.length === 0 ? (
+          <Paper sx={{ p: 10, textAlign: 'center', borderRadius: 4, bgcolor: 'transparent', border: '2px dashed', borderColor: 'divider' }}>
+            <Typography color="text.secondary">{t('activities.noActivities')}</Typography>
+          </Paper>
+        ) : (
+          <Grid container spacing={3}>
+            {activities.map((activity: any) => (
+              <Grid size={{ xs: 12, md: 6, lg: 4 }} key={activity._id}>
+                <Card
+                  onClick={() => canManage && handleEdit(activity)}
+                  sx={{
+                    borderRadius: 4,
+                    height: '100%',
+                    transition: '0.3s',
+                    cursor: canManage ? 'pointer' : 'default',
+                    '&:hover': { transform: 'translateY(-4px)', boxShadow: 4 }
+                  }}
+                >
+                  <CardContent sx={{ p: 3 }}>
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center', mb: 2 }}>
+                      <Chip
+                        label={activity.activityType?.name || 'Evento'}
+                        size="small"
+                        variant="filled"
+                        sx={{ fontWeight: 700, bgcolor: activity.activityType?.color || 'primary.light' }}
                       />
-                    )}
-                    <Box sx={{ flex: 1 }} />
-                    {canManage && (
-                      <IconButton 
-                        size="small" 
-                        color="error" 
-                        onClick={(e) => {
-                          e.stopPropagation(); // Evitar abrir el modal al borrar
-                          if(window.confirm('¿Eliminar actividad?')) deleteMutation.mutate(activity._id);
-                        }}
-                      >
-                        <DeleteIcon fontSize="small" />
-                      </IconButton>
-                    )}
-                  </Stack>
-                  
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{activity.title}</Typography>
-                  <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>{activity.description}</Typography>
-                  
-                  <Stack spacing={1.5}>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                      <CalendarMonthIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-                      <Typography variant="body2" sx={{ fontWeight: 500 }}>
-                        {new Date(activity.startDate).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}
-                      </Typography>
+                      {!activity.church && (
+                        <Chip
+                          label={t('activities.councilEvent')}
+                          size="small"
+                          color="secondary"
+                          variant="outlined"
+                          sx={{ fontWeight: 700, fontSize: 10 }}
+                        />
+                      )}
+                      <Box sx={{ flex: 1 }} />
+                      {canManage && (
+                        <IconButton
+                          size="small"
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation(); // Evitar abrir el modal al borrar
+                            if (window.confirm('¿Eliminar actividad?')) deleteMutation.mutate(activity._id);
+                          }}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      )}
                     </Stack>
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                      {activity.church ? <ChurchIcon sx={{ fontSize: 18, color: 'text.secondary' }} /> : <BusinessIcon sx={{ fontSize: 18, color: 'text.secondary' }} />}
-                      <Typography variant="body2" color="text.secondary">
-                        {activity.church?.name || t('activities.councilEvent')}
-                      </Typography>
-                    </Stack>
-                    {activity.location && (
+
+                    <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{activity.title}</Typography>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>{activity.description}</Typography>
+
+                    <Stack spacing={1.5}>
                       <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                        <LocationOnIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
-                        <Typography variant="body2">{activity.location}</Typography>
+                        <CalendarMonthIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                          {formatDateTime(activity.startDate)}
+                        </Typography>
                       </Stack>
-                    )}
-                  </Stack>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
+                      <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                        {activity.church ? <ChurchIcon sx={{ fontSize: 18, color: 'text.secondary' }} /> : <BusinessIcon sx={{ fontSize: 18, color: 'text.secondary' }} />}
+                        <Typography variant="body2" color="text.secondary">
+                          {activity.church?.name || t('activities.councilEvent')}
+                        </Typography>
+                      </Stack>
+                      {activity.location && (
+                        <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                          <LocationOnIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+                          <Typography variant="body2">{activity.location}</Typography>
+                        </Stack>
+                      )}
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )
       )}
 
-      <ActivityFormDialog 
-        open={open} 
-        onClose={() => { setOpen(false); setSelectedActivity(null); }} 
-        onSuccess={refetch} 
-        initialData={selectedActivity} 
+      < ActivityFormDialog
+        open={open}
+        onClose={() => { setOpen(false); setSelectedActivity(null); }}
+        onSuccess={refetch}
+        initialData={selectedActivity}
       />
       <ActivityTypeDialog open={openTypes} onClose={() => setOpenTypes(false)} />
     </Box>

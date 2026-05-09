@@ -23,6 +23,7 @@ export class MembersController {
     @Query('status') status?: string,
     @Query('gender') gender?: string,
     @Query('ministry') ministry?: string,
+    @Query('church') church?: string,
     @Query('search') search?: string,
     @CurrentUser() user?: any,
   ) {
@@ -30,7 +31,7 @@ export class MembersController {
       status,
       gender,
       ministry,
-      church: user?.churchId,
+      church: church || user?.churchId,
       search,
     });
   }

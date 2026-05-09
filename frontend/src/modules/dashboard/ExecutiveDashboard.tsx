@@ -18,6 +18,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 import { SEO } from '../../components/common/SEO';
+import { formatDate } from '../../utils/format';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
@@ -77,7 +78,7 @@ export const ExecutiveDashboard = () => {
 
   const generatePDF = () => {
     const doc = new jsPDF();
-    const now = new Date().toLocaleDateString();
+    const now = formatDate(new Date());
 
     doc.setFontSize(20);
     doc.text(`Reporte Ejecutivo EcclesiaOps`, 14, 22);

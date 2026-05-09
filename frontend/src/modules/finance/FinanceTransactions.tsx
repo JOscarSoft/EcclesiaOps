@@ -2,6 +2,8 @@ import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, Tab
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '../../utils/format';
+import { DateField } from '../../components/common/DateField';
 import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useState } from 'react';
@@ -40,7 +42,7 @@ export const FinanceTransactions = () => {
     if (!transactions || !transactions.length) return;
     const headers = ['Fecha', 'Categoría', 'Tipo', 'Monto', 'Miembro', 'Descripción'].join(',');
     const rows = transactions.map((t: any) => [
-      new Date(t.date).toLocaleDateString(),
+      formatDate(t.date),
       t.category?.name || 'N/A',
       t.kind === 'Expense' ? 'Gasto' : 'Ingreso',
       t.amount,
@@ -52,7 +54,7 @@ export const FinanceTransactions = () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `transacciones_${new Date().toLocaleDateString()}.csv`);
+    link.setAttribute("download", `transacciones_${formatDate(new Date())}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -65,11 +67,9 @@ export const FinanceTransactions = () => {
   return (
     <Box>
       <Stack direction="row" spacing={2} sx={{ mb: 3, alignItems: 'center' }}>
-        <TextField
+        <DateField
           label="Desde"
-          type="date"
           size="small"
-          slotProps={{ inputLabel: { shrink: true } }}
           value={fromDate}
           onChange={(e) => setFromDate(e.target.value)}
           sx={{
@@ -77,11 +77,9 @@ export const FinanceTransactions = () => {
             '& .MuiInputBase-input': { color: 'text.primary' }
           }}
         />
-        <TextField
+        <DateField
           label="Hasta"
-          type="date"
           size="small"
-          slotProps={{ inputLabel: { shrink: true } }}
           value={toDate}
           onChange={(e) => setToDate(e.target.value)}
           sx={{
@@ -123,7 +121,7 @@ export const FinanceTransactions = () => {
               <TableRow><TableCell colSpan={6} align="center">Cargando...</TableCell></TableRow>
             ) : transactions?.map((transaction: any) => (
               <TableRow key={transaction._id} hover>
-                <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
+                <TableCell>{formatDate(transaction.date)}</TableCell>
                 <TableCell>{transaction.category?.name}</TableCell>
                 <TableCell>
                   <Chip

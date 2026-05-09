@@ -47,8 +47,7 @@ export const ChurchesList = () => {
   const columns: GridColDef[] = [
     { field: 'name', headerName: t('churches.name'), flex: 1 },
     { field: 'address', headerName: t('churches.address'), flex: 1 },
-    { field: 'phone', headerName: t('churches.phone'), width: 150 },
-    { field: 'email', headerName: t('churches.email'), width: 200 },
+    { field: 'pastor', headerName: t('churches.pastor'), flex: 1, valueGetter: (value) => value ? `${value.firstName} ${value.lastName}` : '—' },
     {
       field: 'isActive',
       headerName: t('common.status'),

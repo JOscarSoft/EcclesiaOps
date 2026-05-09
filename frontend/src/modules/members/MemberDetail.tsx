@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '../../utils/format';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
@@ -51,9 +52,9 @@ export const MemberDetail = () => {
     enabled: !!id,
   });
 
-  const { data: tithes = [] } = useQuery({
-    queryKey: ['member-tithes', id],
-    queryFn: async () => (await api.get(`/tenant/finance/stats/member-tithes/${id}`)).data?.transactions,
+  const { data: contributions = [] } = useQuery({
+    queryKey: ['member-contributions', id],
+    queryFn: async () => (await api.get(`/tenant/finance/stats/member-contributions/${id}`)).data?.transactions,
     enabled: !!id && (user?.permissions?.includes('VIEW_FINANCE') || user?.role === 'SUPER_ADMIN'),
   });
 
@@ -79,7 +80,7 @@ export const MemberDetail = () => {
     ) : null
   );
 
-  const formatDate = (d?: string) => d ? new Date(d).toLocaleDateString() : undefined;
+
 
   return (
     <Box sx={{ maxWidth: 960, mx: 'auto' }}>
@@ -179,7 +180,7 @@ export const MemberDetail = () => {
                 <TableBody>
                   {attendance.map((a: any) => (
                     <TableRow key={a._id}>
-                      <TableCell>{new Date(a.date).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatDate(a.date)}</TableCell>
                       <TableCell>{t(EVENT_TYPE_LABELS[a.eventType] || a.eventType)}</TableCell>
                       <TableCell>
                         <Chip label={a.present ? 'Presente' : 'Ausente'} color={a.present ? 'success' : 'default'} size="small" />
@@ -191,16 +192,16 @@ export const MemberDetail = () => {
             )}
           </Paper>
 
-          {/* Tithes History (only if has permission) */}
+          {/* Contributions History (only if has permission) */}
           {(user?.permissions?.includes('VIEW_FINANCE') || user?.role === 'SUPER_ADMIN') && (
             <Paper elevation={0} sx={{ p: 3, mt: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
               <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <AccountBalanceWalletIcon fontSize="small" color="primary" /> {t('finance.tithes')}
+                <AccountBalanceWalletIcon fontSize="small" color="primary" /> {t('finance.contributions')}
               </Typography>
               <Divider sx={{ mb: 1.5 }} />
-              {tithes.length === 0 ? (
+              {contributions.length === 0 ? (
                 <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-                  Sin registros de diezmos.
+                  Sin registros de contribuciones.
                 </Typography>
               ) : (
                 <Table size="small">
@@ -212,9 +213,9 @@ export const MemberDetail = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {tithes.map((t: any) => (
+                    {contributions.map((t: any) => (
                       <TableRow key={t._id}>
-                        <TableCell>{new Date(t.date).toLocaleDateString()}</TableCell>
+                        <TableCell>{formatDate(t.date)}</TableCell>
                         <TableCell align="right" sx={{ fontWeight: 700 }}>
                           {new Intl.NumberFormat('es-DO', { style: 'currency', currency: 'DOP' }).format(t.amount)}
                         </TableCell>

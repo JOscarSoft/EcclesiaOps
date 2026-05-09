@@ -9,6 +9,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { DateField } from '../../components/common/DateField';
 import { useAuthStore } from '../../stores/authStore';
 
 export const MemberFormDialog = ({
@@ -107,7 +108,13 @@ export const MemberFormDialog = ({
             <TextField size="small" label={t('members.lastName')} fullWidth error={!!errors.lastName} helperText={errors.lastName?.message} {...register('lastName')} />
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1.5 }}>
-            <TextField size="small" label={t('members.birthDate')} type="date" fullWidth slotProps={{ inputLabel: { shrink: true } }} {...register('birthDate')} />
+            <Controller
+              name="birthDate"
+              control={control}
+              render={({ field }) => (
+                <DateField size="small" label={t('members.birthDate')} fullWidth {...field} />
+              )}
+            />
             <Controller
               name="gender"
               control={control}
@@ -135,7 +142,13 @@ export const MemberFormDialog = ({
                 </TextField>
               )}
             />
-            <TextField size="small" label={t('members.joinDate')} type="date" fullWidth slotProps={{ inputLabel: { shrink: true } }} {...register('joinDate')} />
+            <Controller
+              name="joinDate"
+              control={control}
+              render={({ field }) => (
+                <DateField size="small" label={t('members.joinDate')} fullWidth {...field} />
+              )}
+            />
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1.5, alignItems: 'center' }}>
             <Controller
@@ -150,7 +163,13 @@ export const MemberFormDialog = ({
               )}
             />
             {baptized && (
-              <TextField size="small" label={t('members.baptismDate')} type="date" fullWidth slotProps={{ inputLabel: { shrink: true } }} {...register('baptismDate')} sx={{ flex: 1 }} />
+              <Controller
+                name="baptismDate"
+                control={control}
+                render={({ field }) => (
+                  <DateField size="small" label={t('members.baptismDate')} fullWidth sx={{ flex: 1 }} {...field} />
+                )}
+              />
             )}
           </Stack>
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} sx={{ mt: 1.5 }}>

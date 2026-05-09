@@ -49,7 +49,7 @@ export class FinanceController {
     return this.financeService.getBalance(month, year, churchId || req.user.churchId);
   }
 
-  @Get('stats/member-tithes/:memberId')
+  @Get('stats/member-contributions/:memberId')
   @RequirePermissions('VIEW_FINANCE')
   getMemberContributions(@Param('memberId') memberId: string, @Req() req: any) {
     return this.financeService.getMemberContributions(memberId);

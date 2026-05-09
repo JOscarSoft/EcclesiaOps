@@ -9,7 +9,7 @@ export class StatsService {
     @Inject(`${Member.name}Model`) private memberModel: Model<Member>,
     @Inject(`${Finance.name}Model`) private financeModel: Model<Finance>,
     @Inject('ChurchModel') private churchModel: Model<any>, // Force registration
-  ) {}
+  ) { }
 
   private getLastYearDate() {
     const date = new Date();
@@ -18,7 +18,7 @@ export class StatsService {
   }
 
   private getMemberMatch(churchId?: string) {
-    const match: any = { 
+    const match: any = {
       isActive: true,
       createdAt: { $gte: this.getLastYearDate() }
     };
@@ -33,7 +33,7 @@ export class StatsService {
   }
 
   private getFinanceMatch(churchId?: string) {
-    const match: any = { 
+    const match: any = {
       isDeleted: false,
       date: { $gte: this.getLastYearDate() }
     };
@@ -53,7 +53,7 @@ export class StatsService {
 
     // 1. Members count
     const totalMembers = await this.memberModel.countDocuments(memberMatch);
-    
+
     // 2. Finance Summary (Aggregated)
     const financeStats = await this.financeModel.aggregate([
       { $match: financeMatch },
@@ -68,7 +68,7 @@ export class StatsService {
     const statsMap = financeStats.reduce((acc, curr) => {
       acc[curr._id] = curr.total;
       return acc;
-    }, { Tithe: 0, Offering: 0, Expense: 0 });
+    }, { Income: 0, Expense: 0 });
 
     // 3. Churches count (This is global, usually doesn't filter by date unless we want new churches)
     const totalChurches = await this.churchModel.countDocuments({ isActive: true });
@@ -78,9 +78,9 @@ export class StatsService {
         total: totalMembers,
       },
       finance: {
-        income: statsMap.Tithe + statsMap.Offering,
+        income: statsMap.Income,
         expenses: statsMap.Expense,
-        balance: (statsMap.Tithe + statsMap.Offering) - statsMap.Expense
+        balance: statsMap.Income - statsMap.Expense
       },
       churches: {
         total: totalChurches
@@ -110,7 +110,7 @@ export class StatsService {
           _id: { month: '$_id.month', year: '$_id.year' },
           income: {
             $sum: {
-              $cond: [{ $in: ['$_id.kind', ['Tithe', 'Offering']] }, '$total', 0]
+              $cond: [{ $in: ['$_id.kind', ['Income']] }, '$total', 0]
             }
           },
           expenses: {
@@ -138,13 +138,13 @@ export class StatsService {
             { $group: { _id: '$status', count: { $sum: 1 } } }
           ],
           growth: [
-             {
-               $group: {
-                 _id: { month: { $month: '$createdAt' }, year: { $year: '$createdAt' } },
-                 count: { $sum: 1 }
-               }
-             },
-             { $sort: { '_id.year': 1, '_id.month': 1 } }
+            {
+              $group: {
+                _id: { month: { $month: '$createdAt' }, year: { $year: '$createdAt' } },
+                count: { $sum: 1 }
+              }
+            },
+            { $sort: { '_id.year': 1, '_id.month': 1 } }
           ]
         }
       }
@@ -190,7 +190,7 @@ export class StatsService {
       { $unwind: { path: '$churchInfo', preserveNullAndEmptyArrays: true } },
       {
         $group: {
-          _id: { 
+          _id: {
             churchName: { $ifNull: ['$churchInfo.name', 'Nivel Conciliar'] },
             kind: '$kind'
           },
@@ -202,7 +202,7 @@ export class StatsService {
           _id: '$_id.churchName',
           income: {
             $sum: {
-              $cond: [{ $in: ['$_id.kind', ['Tithe', 'Offering']] }, '$total', 0]
+              $cond: [{ $in: ['$_id.kind', ['Income']] }, '$total', 0]
             }
           },
           expenses: {

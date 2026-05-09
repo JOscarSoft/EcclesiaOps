@@ -11,7 +11,6 @@ export class TenantMiddleware implements NestMiddleware {
       console.warn(`[TenantMiddleware] Petición a ${req.url} sin header ${TENANT_ID_HEADER}`);
       throw new BadRequestException(`El header ${TENANT_ID_HEADER} es obligatorio para las rutas de tenant.`);
     }
-    console.log(`[TenantMiddleware] Tenant ID detectado: ${tenantId} para la ruta: ${req.url}`);
     // Inject the tenant id into the request object
     (req as any).tenantId = tenantId.toString();
     next();

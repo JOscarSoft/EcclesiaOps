@@ -3,12 +3,11 @@ import { FinanceController } from './finance.controller';
 import { FinanceService } from './finance.service';
 import { TENANT_CONNECTION } from '../../tenants/tenant-connection.provider';
 import { Connection } from 'mongoose';
-import { 
-  Finance, FinanceSchema, 
-  Tithe, TitheSchema, 
-  Offering, OfferingSchema, 
-  Expense, ExpenseSchema, 
-  FinanceCategory, FinanceCategorySchema 
+import {
+  Finance, FinanceSchema,
+  Income, IncomeSchema,
+  Expense, ExpenseSchema,
+  FinanceCategory, FinanceCategorySchema
 } from './schemas/finance.schema';
 import { Member, MemberSchema } from '../members/schemas/member.schema';
 import { Church, ChurchSchema } from '../churches/schemas/church.schema';
@@ -26,9 +25,8 @@ import { Church, ChurchSchema } from '../churches/schemas/church.schema';
       useFactory: (connection: Connection) => {
         // Setup discriminators
         const model = connection.model(Finance.name, FinanceSchema);
-        if (!model.discriminators || !model.discriminators['Tithe']) {
-          model.discriminator('Tithe', TitheSchema);
-          model.discriminator('Offering', OfferingSchema);
+        if (!model.discriminators || !model.discriminators['Income']) {
+          model.discriminator('Income', IncomeSchema);
           model.discriminator('Expense', ExpenseSchema);
         }
         return model;
@@ -49,4 +47,4 @@ import { Church, ChurchSchema } from '../churches/schemas/church.schema';
   controllers: [FinanceController],
   exports: [FinanceService],
 })
-export class FinanceModule {}
+export class FinanceModule { }

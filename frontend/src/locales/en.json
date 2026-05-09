@@ -46,7 +46,8 @@
     "name": "Name",
     "address": "Address",
     "phone": "Phone Number",
-    "email": "Email"
+    "email": "Email",
+    "pastor": "Pastor"
   },
   "users": {
     "title": "Users",
