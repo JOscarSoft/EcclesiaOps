@@ -46,6 +46,7 @@ export const UsersList = () => {
   };
 
   const columns: GridColDef[] = [
+    { field: 'username', headerName: t('users.username'), flex: 1 },
     { field: 'firstName', headerName: t('users.firstName'), flex: 1 },
     { field: 'lastName', headerName: t('users.lastName'), flex: 1 },
     { field: 'email', headerName: t('users.email'), flex: 1 },

@@ -9,31 +9,33 @@ import { PlatformUser } from '../platform/users/schemas/platform-user.schema';
 import { User, UserSchema } from '../tenant/users/schemas/user.schema';
 import { Role, RoleSchema } from '../tenant/roles/schemas/role.schema';
 import { Permission, PermissionSchema } from '../tenant/roles/schemas/permission.schema';
+import { Church, ChurchSchema } from '../tenant/churches/schemas/church.schema';
+import { Council } from '../platform/councils/schemas/council.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectModel(PlatformUser.name) private platformUserModel: Model<PlatformUser>,
+    @InjectModel(Council.name) private councilModel: Model<Council>,
     private jwtService: JwtService,
   ) { }
 
-  async platformLogin(email: string, passwordRaw: string) {
-    const user = await this.platformUserModel.findOne({ email });
-    if (!user) throw new UnauthorizedException('Credenciales inválidas!!!');
+  async platformLogin(username: string, passwordRaw: string) {
+    const user = await this.platformUserModel.findOne({ username });
+    if (!user) throw new UnauthorizedException('Credenciales invlidas!!!');
 
     const isValid = await bcrypt.compare(passwordRaw, user.passwordHash);
-    if (!isValid) throw new UnauthorizedException('Credenciales inválidas');
+    if (!isValid) throw new UnauthorizedException('Credenciales invlidas');
 
-    const payload = { email: user.email, sub: user._id, type: 'platform', role: 'SUPER_ADMIN' };
+    const payload = { username: user.username, email: user.email, sub: user._id, type: 'platform', role: 'SUPER_ADMIN' };
 
     return {
       access_token: this.jwtService.sign(payload),
-      refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }), // Simplified for MVP
+      refresh_token: this.jwtService.sign(payload, { expiresIn: '7d' }),
     };
   }
 
-  async tenantLogin(email: string, passwordRaw: string, tenantId: string) {
-    // Dynamic connection to verify user
+  async tenantLogin(username: string, passwordRaw: string, tenantId: string) {
     const baseUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/platform_db';
     const uriParts = baseUri.split('/');
     const lastPart = uriParts.pop();
@@ -43,9 +45,10 @@ export class AuthService {
     const connection = mongoose.createConnection(tenantUri);
     const UserModel = connection.model<User>(User.name, UserSchema);
     const RoleModel = connection.model<Role>(Role.name, RoleSchema);
+    const ChurchModel = connection.model<Church>(Church.name, ChurchSchema);
     const PermissionModel = connection.model<Permission>(Permission.name, PermissionSchema);
 
-    const user = await UserModel.findOne({ email }).populate({
+    const user = await UserModel.findOne({ username }).populate({
       path: 'role',
       model: RoleModel,
       populate: {
@@ -56,25 +59,37 @@ export class AuthService {
 
     if (!user || !user.isActive) {
       await connection.close();
-      throw new UnauthorizedException('Credenciales inválidas o usuario inactivo');
+      throw new UnauthorizedException('Credenciales inv�lidas o usuario inactivo');
     }
 
     const isValid = await bcrypt.compare(passwordRaw, user.passwordHash);
     if (!isValid) {
       await connection.close();
-      throw new UnauthorizedException('Credenciales inválidas');
+      throw new UnauthorizedException('Credenciales inv�lidas');
     }
 
     const roleObj = user.role as any;
     const roleName = roleObj?.name || 'USER';
     const permissions = roleObj?.permissions?.map((p: any) => p.name) || [];
+    const churchName = (await ChurchModel.findById((user as any).church))?.name;
+    const councilName = (await this.councilModel.findOne({ domain: tenantId }))?.name;
+
+    let fullChurchName = `${councilName}`;
+
+    if (churchName) {
+      fullChurchName = `${churchName} - ${fullChurchName}`;
+    }
 
     const payload = {
+      username: user.username,
       email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
       sub: user._id,
       type: 'tenant',
       tenantId,
       churchId: (user as any).church,
+      churchName: fullChurchName,
       role: roleName,
       permissions
     };

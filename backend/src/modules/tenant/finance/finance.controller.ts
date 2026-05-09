@@ -7,7 +7,7 @@ import { RequirePermissions } from '../../../common/decorators/permissions.decor
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('tenant/finance')
 export class FinanceController {
-  constructor(private readonly financeService: FinanceService) {}
+  constructor(private readonly financeService: FinanceService) { }
 
   @Get('categories')
   @RequirePermissions('VIEW_FINANCE')
@@ -30,10 +30,10 @@ export class FinanceController {
   @Post('transactions')
   @RequirePermissions('MANAGE_FINANCE')
   create(@Req() req: any, @Body() data: any) {
-    return this.financeService.createTransaction({ 
-      ...data, 
-      createdBy: req.user.userId, 
-      church: req.user.churchId || data.church 
+    return this.financeService.createTransaction({
+      ...data,
+      createdBy: req.user.userId,
+      church: req.user.churchId || data.church
     });
   }
 
@@ -47,5 +47,11 @@ export class FinanceController {
   @RequirePermissions('VIEW_FINANCE')
   getBalance(@Req() req: any, @Query('month') month: number, @Query('year') year: number, @Query('church') churchId: string) {
     return this.financeService.getBalance(month, year, churchId || req.user.churchId);
+  }
+
+  @Get('stats/member-tithes/:memberId')
+  @RequirePermissions('VIEW_FINANCE')
+  getMemberContributions(@Param('memberId') memberId: string, @Req() req: any) {
+    return this.financeService.getMemberContributions(memberId);
   }
 }

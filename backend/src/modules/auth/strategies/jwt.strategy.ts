@@ -14,16 +14,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // This payload is injected into Request.user
     if (!payload.sub) {
       throw new UnauthorizedException();
     }
     return {
       userId: payload.sub,
+      username: payload.username,
       email: payload.email,
-      type: payload.type, // 'platform' | 'tenant'
-      tenantId: payload.tenantId, // Present if type is 'tenant'
-      churchId: payload.churchId, // Present if user belongs to a church
+      type: payload.type,
+      tenantId: payload.tenantId,
+      churchId: payload.churchId,
       role: payload.role,
       permissions: payload.permissions || [],
     };

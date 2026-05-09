@@ -53,7 +53,7 @@ export const MemberDetail = () => {
 
   const { data: tithes = [] } = useQuery({
     queryKey: ['member-tithes', id],
-    queryFn: async () => (await api.get(`/tenant/finance/stats/member-tithes/${id}`)).data,
+    queryFn: async () => (await api.get(`/tenant/finance/stats/member-tithes/${id}`)).data?.transactions,
     enabled: !!id && (user?.permissions?.includes('VIEW_FINANCE') || user?.role === 'SUPER_ADMIN'),
   });
 
@@ -189,45 +189,45 @@ export const MemberDetail = () => {
                 </TableBody>
               </Table>
             )}
-            </Paper>
+          </Paper>
 
-            {/* Tithes History (only if has permission) */}
-            {(user?.permissions?.includes('VIEW_FINANCE') || user?.role === 'SUPER_ADMIN') && (
-              <Paper elevation={0} sx={{ p: 3, mt: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <AccountBalanceWalletIcon fontSize="small" color="primary" /> {t('finance.tithes')}
+          {/* Tithes History (only if has permission) */}
+          {(user?.permissions?.includes('VIEW_FINANCE') || user?.role === 'SUPER_ADMIN') && (
+            <Paper elevation={0} sx={{ p: 3, mt: 2, border: '1px solid', borderColor: 'divider', borderRadius: 2 }}>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, mb: 1.5, display: 'flex', alignItems: 'center', gap: 1 }}>
+                <AccountBalanceWalletIcon fontSize="small" color="primary" /> {t('finance.tithes')}
+              </Typography>
+              <Divider sx={{ mb: 1.5 }} />
+              {tithes.length === 0 ? (
+                <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+                  Sin registros de diezmos.
                 </Typography>
-                <Divider sx={{ mb: 1.5 }} />
-                {tithes.length === 0 ? (
-                  <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
-                    Sin registros de diezmos.
-                  </Typography>
-                ) : (
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>Fecha</TableCell>
-                        <TableCell align="right">Monto</TableCell>
-                        <TableCell>Método</TableCell>
+              ) : (
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Fecha</TableCell>
+                      <TableCell align="right">Monto</TableCell>
+                      <TableCell>Método</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {tithes.map((t: any) => (
+                      <TableRow key={t._id}>
+                        <TableCell>{new Date(t.date).toLocaleDateString()}</TableCell>
+                        <TableCell align="right" sx={{ fontWeight: 700 }}>
+                          {new Intl.NumberFormat('es-DO', { style: 'currency', currency: 'DOP' }).format(t.amount)}
+                        </TableCell>
+                        <TableCell>{t.method}</TableCell>
                       </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {tithes.map((t: any) => (
-                        <TableRow key={t._id}>
-                          <TableCell>{new Date(t.date).toLocaleDateString()}</TableCell>
-                          <TableCell align="right" sx={{ fontWeight: 700 }}>
-                            {new Intl.NumberFormat('es-DO', { style: 'currency', currency: 'DOP' }).format(t.amount)}
-                          </TableCell>
-                          <TableCell>{t.method}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </Paper>
-            )}
-          </Box>
-        </Stack>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </Paper>
+          )}
+        </Box>
+      </Stack>
 
       <MemberFormDialog open={editOpen} onClose={() => setEditOpen(false)} onSuccess={() => { setEditOpen(false); refetch(); }} initialData={member} />
     </Box>

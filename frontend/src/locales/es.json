@@ -1,4 +1,4 @@
-{
+﻿{
   "menu": {
     "dashboard": "Dashboard",
     "users": "Usuarios",
@@ -27,11 +27,12 @@
     "required": "Campo requerido",
     "invalidEmail": "Email inválido",
     "name": "Nombre",
-    "none": "Ninguno"
+    "none": "Ninguno",
+    "close": "Cerrar"
   },
   "login": {
     "title": "Acceso a la plataforma",
-    "email": "Correo Electrónico",
+    "username": "Usuario",
     "password": "Contraseña",
     "tenantId": "ID de Concilio",
     "tenantHint": "Comuníquese con soporte técnico si no recuerda su ID",
@@ -53,6 +54,7 @@
     "editUser": "Editar Usuario",
     "firstName": "Nombre",
     "lastName": "Apellido",
+    "username": "Usuario",
     "email": "Email",
     "role": "Rol",
     "church": "Iglesia",
@@ -93,7 +95,7 @@
     "firstName": "Nombre",
     "lastName": "Apellido",
     "fullName": "Nombre Completo",
-    "age": "Años",
+    "age": "Edad",
     "gender": "Sexo",
     "male": "Masculino",
     "female": "Femenino",
@@ -194,6 +196,15 @@
     "color": "Color",
     "councilEvent": "Actividad Conciliar",
     "churchEvent": "Actividad Local"
+  },
+  "changePassword": {
+    "title": "Cambiar Contraseña",
+    "currentPassword": "Contraseña Actual",
+    "newPassword": "Nueva Contraseña",
+    "confirmPassword": "Confirmar Nueva Contraseña",
+    "minLength": "Mínimo 6 caracteres",
+    "mismatch": "Las contraseñas no coinciden",
+    "success": "Contraseña actualizada exitosamente"
   },
   "analytics": {
     "title": "Dashboard Ejecutivo",

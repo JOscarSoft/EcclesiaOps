@@ -9,6 +9,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import GroupsIcon from '@mui/icons-material/Groups';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LockIcon from '@mui/icons-material/Lock';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import TranslateIcon from '@mui/icons-material/Translate';
@@ -19,6 +20,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 import { useUiStore } from '../stores/uiStore';
 import { useTranslation } from 'react-i18next';
+import { ChangePasswordDialog } from '../components/common/ChangePasswordDialog';
 
 const drawerWidth = 260;
 
@@ -28,7 +30,7 @@ const tenantMenuItems = [
   { translationKey: 'menu.churches', icon: <ChurchIcon />, path: '/churches', permission: 'MANAGE_CHURCHES' },
   { translationKey: 'menu.members', icon: <GroupsIcon />, path: '/members', permission: 'VIEW_MEMBERS' },
   { translationKey: 'menu.finance', icon: <AccountBalanceIcon />, path: '/finance', permission: 'VIEW_FINANCE' },
-  { translationKey: 'menu.analytics', icon: <InsightsIcon />, path: '/analytics', permission: 'VIEW_DASHBOARD' },
+  { translationKey: 'menu.analytics', icon: <InsightsIcon />, path: '/analytics', permission: 'VIEW_FINANCE' },
   { translationKey: 'menu.ministries', icon: <GroupsIcon />, path: '/ministries', permission: 'VIEW_MINISTRIES' },
   { translationKey: 'menu.roles', icon: <SettingsIcon />, path: '/roles', permission: 'MANAGE_ROLES' },
   { translationKey: 'menu.users', icon: <PeopleIcon />, path: '/users', permission: 'MANAGE_USERS' },
@@ -42,6 +44,7 @@ const platformMenuItems = [
 export const MainLayout = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langAnchorEl, setLangAnchorEl] = useState<null | HTMLElement>(null);
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -137,6 +140,9 @@ export const MainLayout = () => {
             {user.email}
           </Typography>
         </Box>
+        <IconButton onClick={() => setChangePasswordOpen(true)} color="primary" size="small" title={t('changePassword.title')}>
+          <LockIcon />
+        </IconButton>
         <IconButton onClick={handleLogout} color="error" size="small" title={t('common.logout')}>
           <LogoutIcon />
         </IconButton>
@@ -214,6 +220,8 @@ export const MainLayout = () => {
         <Toolbar />
         <Outlet />
       </Box>
+
+      <ChangePasswordDialog open={changePasswordOpen} onClose={() => setChangePasswordOpen(false)} />
     </Box>
   );
 };

@@ -62,7 +62,6 @@ export class CouncilsService {
 
     const newCouncil = await this.councilModel.create({ name, domain });
 
-    // Auto-provisioning the new Tenant DB
     await this.provisionTenantDb(domain, adminEmail, adminPasswordRaw);
 
     return newCouncil;
@@ -112,15 +111,13 @@ export class CouncilsService {
     const createdPermissions = await PermissionModel.insertMany(standardPermissions);
     const permissionIds = createdPermissions.map(p => p._id);
 
-    // Create Admin Role
     const adminRole = await RoleModel.create({ name: 'ADMIN', permissions: permissionIds });
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(adminPasswordRaw, salt);
 
-    // Create Admin User
     await UserModel.create({
+      username: adminEmail,
       email: adminEmail,
       passwordHash,
       firstName: 'Admin',

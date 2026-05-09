@@ -1,4 +1,4 @@
-import { Injectable, Inject, NotFoundException, ConflictException } from '@nestjs/common';
+﻿import { Injectable, Inject, NotFoundException, ConflictException, UnauthorizedException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { Role } from '../roles/schemas/role.schema';
@@ -23,8 +23,13 @@ export class UsersService {
       }
     }
 
-    const existing = await this.userModel.findOne({ email: data.email });
-    if (existing) throw new ConflictException('El correo ya está registrado');
+    const existingUsername = await this.userModel.findOne({ username: data.username });
+    if (existingUsername) throw new ConflictException('El nombre de usuario ya está registrado');
+
+    if (data.email) {
+      const existingEmail = await this.userModel.findOne({ email: data.email });
+      if (existingEmail) throw new ConflictException('El correo ya está registrado');
+    }
 
     const role = await this.roleModel.findById(data.role);
     if (!role) throw new NotFoundException('Rol no encontrado');
@@ -78,5 +83,19 @@ export class UsersService {
 
   async getRoles() {
     return this.roleModel.find().exec();
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const user = await this.userModel.findById(userId);
+    if (!user) throw new NotFoundException('Usuario no encontrado');
+
+    const isValid = await bcrypt.compare(currentPassword, user.passwordHash);
+    if (!isValid) throw new UnauthorizedException('La contraseña actual no es correcta');
+
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(newPassword, salt);
+
+    await this.userModel.findByIdAndUpdate(userId, { passwordHash });
+    return { message: 'Contraseña actualizada exitosamente' };
   }
 }

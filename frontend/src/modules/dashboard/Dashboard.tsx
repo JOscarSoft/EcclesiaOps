@@ -32,7 +32,7 @@ export const Dashboard = () => {
           {t('menu.dashboard')}
         </Typography>
         <Typography color="text.secondary">
-          {isSuperAdmin ? 'Administrador Global' : `${t('login.title')}: ${user?.firstName} ${user?.lastName}`} 
+          {isSuperAdmin ? 'Administrador Global' : `${user?.firstName} ${user?.lastName}`}
           {!isSuperAdmin && (user?.churchName ? ` | ${user.churchName}` : ' | Concilio Global')}
         </Typography>
       </Box>
@@ -44,7 +44,7 @@ export const Dashboard = () => {
             <DashboardCalendar />
           </Grid>
         )}
-        
+
         {/* Quick Stats */}
         <Grid size={{ xs: 12, md: isSuperAdmin ? 12 : 8 }}>
           <Grid container spacing={3}>

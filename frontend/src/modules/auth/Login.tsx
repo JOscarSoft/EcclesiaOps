@@ -13,7 +13,7 @@ export const Login = () => {
   const { t } = useTranslation();
   
   const schema = z.object({
-    email: z.string().email(t('common.invalidEmail')),
+    username: z.string().min(1, t('common.required')),
     password: z.string().min(1, t('common.required')),
     tenantId: z.string().optional(),
   });
@@ -34,12 +34,12 @@ export const Login = () => {
       let response;
       if (!data.tenantId) {
         response = await api.post('/platform/auth/login', {
-          email: data.email,
+          username: data.username,
           password: data.password,
         });
       } else {
         response = await api.post('/tenant/auth/login', {
-          email: data.email,
+          username: data.username,
           password: data.password,
         }, {
           headers: { 'x-tenant-id': data.tenantId }
@@ -74,12 +74,12 @@ export const Login = () => {
         
         <form onSubmit={handleSubmit((data) => mutation.mutate(data))}>
           <TextField
-            label={t('login.email')}
+            label={t('login.username')}
             fullWidth
             margin="normal"
-            {...register('email')}
-            error={!!errors.email}
-            helperText={errors.email?.message}
+            {...register('username')}
+            error={!!errors.username}
+            helperText={errors.username?.message}
           />
           <TextField
             label={t('login.password')}

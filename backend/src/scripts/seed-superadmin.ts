@@ -12,7 +12,7 @@ async function bootstrap() {
 
   const email = 'superadmin@ecclesiaops.com';
   
-  const existing = await platformUserModel.findOne({ email });
+  const existing = await platformUserModel.findOne({ username: email });
   if (existing) {
     console.log('El SuperAdmin ya existe.');
     await app.close();
@@ -23,6 +23,7 @@ async function bootstrap() {
   const passwordHash = await bcrypt.hash('admin123', salt);
 
   await platformUserModel.create({
+    username: email,
     email,
     passwordHash,
     name: 'Administrador Global',

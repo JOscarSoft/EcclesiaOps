@@ -1,5 +1,5 @@
 import { Injectable, Inject, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Finance, FinanceCategory } from './schemas/finance.schema';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class FinanceService {
     @Inject('FINANCE_CATEGORY_MODEL') private categoryModel: Model<FinanceCategory>,
     @Inject('MEMBER_MODEL') private memberModel: Model<any>,
     @Inject('CHURCH_MODEL') private churchModel: Model<any>, // Force registration
-  ) {}
+  ) { }
 
   // --- CATEGORIES ---
   async findAllCategories(type?: string) {
@@ -26,7 +26,7 @@ export class FinanceService {
   async findAllTransactions(churchId?: string, filters: { from?: string, to?: string } = {}) {
     const query: any = { isDeleted: false };
     if (churchId) query.church = churchId;
-    
+
     if (filters.from || filters.to) {
       query.date = {};
       if (filters.from) query.date.$gte = new Date(filters.from);
@@ -57,7 +57,7 @@ export class FinanceService {
     const startDate = new Date(y, m - 1, 1);
     const endDate = new Date(y, m, 0);
 
-    const query: any = { 
+    const query: any = {
       isDeleted: false,
       date: { $gte: startDate, $lte: endDate }
     };
@@ -75,6 +75,24 @@ export class FinanceService {
       expenses,
       totalIncome: tithes + offerings,
       netBalance: (tithes + offerings) - expenses
+    };
+  }
+
+  // Get member contributions (tithes + offerings only)
+  async getMemberContributions(memberId: string) {
+    const transactions = await this.financeModel.find({
+      member: new Types.ObjectId(memberId),
+      isDeleted: false,
+    })
+      .populate('category', 'name type')
+      .sort({ date: -1 })
+      .exec();
+
+    const total = transactions.reduce((acc, curr) => acc + curr.amount, 0);
+
+    return {
+      transactions,
+      total,
     };
   }
 }

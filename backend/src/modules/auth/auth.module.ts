@@ -8,6 +8,7 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PlatformUser, PlatformUserSchema } from '../platform/users/schemas/platform-user.schema';
+import { Council, CouncilSchema } from '../platform/councils/schemas/council.schema';
 
 @Module({
   imports: [
@@ -20,10 +21,13 @@ import { PlatformUser, PlatformUserSchema } from '../platform/users/schemas/plat
         signOptions: { expiresIn: '15m' },
       }),
     }),
-    MongooseModule.forFeature([{ name: PlatformUser.name, schema: PlatformUserSchema }]),
+    MongooseModule.forFeature([
+      { name: PlatformUser.name, schema: PlatformUserSchema },
+      { name: Council.name, schema: CouncilSchema }
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [JwtStrategy, PassportModule],
 })
-export class AuthModule {}
+export class AuthModule { }

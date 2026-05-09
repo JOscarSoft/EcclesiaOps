@@ -9,6 +9,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useAuthStore } from '../../stores/authStore';
 
 export const MemberFormDialog = ({
   open, onClose, onSuccess, initialData
@@ -35,6 +36,7 @@ export const MemberFormDialog = ({
 
   type FormValues = z.infer<typeof schema>;
 
+  const { user } = useAuthStore();
   const { register, handleSubmit, reset, control, watch, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { status: 'ACTIVE', baptized: false, ministries: [] }
@@ -56,10 +58,11 @@ export const MemberFormDialog = ({
         phone: initialData?.phone || '',
         email: initialData?.email || '',
         address: initialData?.address || '',
-        church: initialData?.church?._id || '',
+        church: user?.churchId || initialData?.church?._id || '',
         ministries: initialData?.ministries?.map((m: any) => m._id || m) || [],
         familyGroup: initialData?.familyGroup || '',
         notes: initialData?.notes || '',
+
       });
     }
   }, [open, initialData, reset]);
@@ -155,7 +158,7 @@ export const MemberFormDialog = ({
               name="church"
               control={control}
               render={({ field }) => (
-                <TextField select size="small" label={t('members.church')} fullWidth {...field} value={field.value || ''}>
+                <TextField select disabled={user?.churchId ? true : false} size="small" label={t('members.church')} fullWidth {...field} value={field.value || ''}>
                   <MenuItem value="">—</MenuItem>
                   {churches.map((c: any) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
                 </TextField>

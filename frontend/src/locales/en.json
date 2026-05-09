@@ -1,4 +1,4 @@
-{
+﻿{
   "menu": {
     "dashboard": "Dashboard",
     "users": "Users",
@@ -27,11 +27,12 @@
     "required": "Required field",
     "invalidEmail": "Invalid email format",
     "name": "Name",
-    "none": "None"
+    "none": "None",
+    "close": "Close"
   },
   "login": {
     "title": "Platform Access",
-    "email": "Email Address",
+    "username": "Username",
     "password": "Password",
     "tenantId": "Council ID",
     "tenantHint": "Contact support if you do not remember your ID",
@@ -53,6 +54,7 @@
     "editUser": "Edit User",
     "firstName": "First Name",
     "lastName": "Last Name",
+    "username": "Username",
     "email": "Email",
     "role": "Role",
     "church": "Church",
@@ -194,6 +196,15 @@
     "color": "Color",
     "councilEvent": "Council Event",
     "churchEvent": "Local Activity"
+  },
+  "changePassword": {
+    "title": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "minLength": "Minimum 6 characters",
+    "mismatch": "Passwords do not match",
+    "success": "Password updated successfully"
   },
   "analytics": {
     "title": "Executive Dashboard",

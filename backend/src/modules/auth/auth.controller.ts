@@ -10,7 +10,7 @@ export class AuthController {
 
   @Post('platform/auth/login')
   async platformLogin(@Body() loginDto: LoginDto) {
-    return this.authService.platformLogin(loginDto.email, loginDto.password);
+    return this.authService.platformLogin(loginDto.username, loginDto.password);
   }
 
   @Post('tenant/auth/login')
@@ -19,6 +19,6 @@ export class AuthController {
     if (!tenantId) {
       throw new UnauthorizedException('x-tenant-id es requerido para el login de concilio');
     }
-    return this.authService.tenantLogin(loginDto.email, loginDto.password, tenantId);
+    return this.authService.tenantLogin(loginDto.username, loginDto.password, tenantId);
   }
 }
