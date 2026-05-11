@@ -77,7 +77,7 @@ export class AuthService {
     let fullChurchName = `${councilName}`;
 
     if (churchName) {
-      fullChurchName = `${churchName} - ${fullChurchName}`;
+      fullChurchName = `${fullChurchName} - ${churchName}`;
     }
 
     const payload = {
