@@ -11,6 +11,7 @@ import { useAuthStore } from '../../stores/authStore';
 import { api } from '../../core/api';
 import { formatDate, getDaysDiff, isSpanishFeminine } from '../../utils/format';
 import PrintIcon from '@mui/icons-material/Print';
+import { ACTIVITY_TEMPLATE } from './activityTemplate';
 
 interface BookEntry {
   testament: string;
@@ -104,8 +105,7 @@ export const InvitationModal = ({
     setError('');
 
     try {
-      const templateResponse = await fetch('/ActivityTemplate.html');
-      let html = await templateResponse.text();
+      let html = ACTIVITY_TEMPLATE;
 
       let churchAddress = '';
       let churchPhone = '';

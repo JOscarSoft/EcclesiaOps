@@ -1,4 +1,4 @@
-<!doctype html>
+export const ACTIVITY_TEMPLATE = `<!doctype html>
 <html lang="es-DO">
 
 <head>
@@ -69,7 +69,7 @@
   <p style="line-height: 108%">
     <span lang="es-DO" style="font-size: 14pt"><b>A:</b></span>
     <span lang="es-DO" style="font-size: 12pt"><i> </i></span>
-    <span lang="es-DO" style="font-size: 12pt">Pastor y Congregación</span>
+    <span lang="es-DO" style="font-size: 12pt">Pastor y Congregaci\u00F3n</span>
   </p>
   <p style="line-height: 108%">
     <span lang="es-DO" style="font-size: 14pt"><b>Asunto</b></span>
@@ -90,8 +90,8 @@
     <br />
   </p>
   <p style="text-align: justify; line-height: 108%">
-    <span lang="es-DO" style="font-size: 12pt">Por medio de la presente, deseándole las más grandes bendiciones de
-      parte de Nuestro Señor Jesucristo, nos complace invitarle a {{ActivityTitle}}, a celebrarse este próximo
+    <span lang="es-DO" style="font-size: 12pt">Por medio de la presente, dese\u00E1ndole las m\u00E1s grandes bendiciones de
+      parte de Nuestro Se\u00F1or Jesucristo, nos complace invitarle a {{ActivityTitle}}, a celebrarse este pr\u00F3ximo
       {{ActivityDate}}.</span>
   </p>
   <p lang="es-DO" style="text-align: justify; line-height: 108%; margin-bottom: 0.11in">
@@ -130,4 +130,4 @@
   </div>
 </body>
 
-</html>
+</html>`;
