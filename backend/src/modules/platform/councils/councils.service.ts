@@ -19,6 +19,10 @@ export class CouncilsService {
     return this.councilModel.find({ isActive: true }).exec();
   }
 
+  async findByDomain(domain: string) {
+    return this.councilModel.findOne({ domain, isActive: true }).exec();
+  }
+
   async findOne(id: string) {
     const council = await this.councilModel.findById(id).exec();
     if (!council) throw new NotFoundException('Concilio no encontrado');
@@ -54,13 +58,22 @@ export class CouncilsService {
     };
   }
 
-  async createCouncil(name: string, domain: string, adminEmail: string, adminPasswordRaw: string) {
+  async createCouncil(
+    name: string,
+    domain: string,
+    adminEmail: string,
+    adminPasswordRaw: string,
+    phone?: string,
+    address?: string,
+    contactName?: string,
+    email?: string,
+  ) {
     const existing = await this.councilModel.findOne({ domain });
     if (existing) {
       throw new ConflictException('El dominio del concilio ya existe');
     }
 
-    const newCouncil = await this.councilModel.create({ name, domain });
+    const newCouncil = await this.councilModel.create({ name, domain, phone, address, contactName, email });
 
     await this.provisionTenantDb(domain, adminEmail, adminPasswordRaw);
 

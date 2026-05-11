@@ -8,6 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import SettingsIcon from '@mui/icons-material/Settings';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import ChurchIcon from '@mui/icons-material/Church';
@@ -16,6 +17,7 @@ import { ActivityFormDialog } from './ActivityFormDialog';
 import { formatDateTime } from '../../utils/format';
 import { DateField } from '../../components/common/DateField';
 import { ActivityTypeDialog } from './ActivityTypeDialog';
+import { InvitationModal } from './InvitationModal';
 
 export const ActivitiesList = () => {
   const { t } = useTranslation();
@@ -25,6 +27,8 @@ export const ActivitiesList = () => {
   const [open, setOpen] = useState(false);
   const [openTypes, setOpenTypes] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
+  const [openInvitation, setOpenInvitation] = useState(false);
+  const [invitationActivity, setInvitationActivity] = useState<any>(null);
 
   // Date filters
   const [fromDate, setFromDate] = useState('');
@@ -154,6 +158,17 @@ export const ActivitiesList = () => {
                         />
                       )}
                       <Box sx={{ flex: 1 }} />
+                      <IconButton
+                        size="small"
+                        color="primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setInvitationActivity(activity);
+                          setOpenInvitation(true);
+                        }}
+                      >
+                        <PictureAsPdfIcon fontSize="small" />
+                      </IconButton>
                       {canManage && (
                         <IconButton
                           size="small"
@@ -206,6 +221,11 @@ export const ActivitiesList = () => {
         initialData={selectedActivity}
       />
       <ActivityTypeDialog open={openTypes} onClose={() => setOpenTypes(false)} />
+      <InvitationModal
+        open={openInvitation}
+        onClose={() => { setOpenInvitation(false); setInvitationActivity(null); }}
+        activity={invitationActivity}
+      />
     </Box>
   );
 };

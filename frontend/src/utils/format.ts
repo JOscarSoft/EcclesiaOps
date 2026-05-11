@@ -17,3 +17,30 @@ export const formatDateTime = (date?: string | Date): string => {
   const minutes = String(d.getMinutes()).padStart(2, '0');
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
+
+export function isSpanishFeminine(word: string): boolean {
+  const normalizedWord = word.toLowerCase().trim();
+
+  // 1. Known Exceptions (Words ending in -o that are feminine)
+  const femExceptions = ["mano", "foto", "radio", "moto"];
+  if (femExceptions.includes(normalizedWord)) return true;
+
+  // 2. Common Feminine Endings
+  const femEndings = ["a", "cion", "sion", "ción", "sión", "dad", "tad", "tud", "umbre", "ie", "z"];
+  if (femEndings.some(ending => normalizedWord.endsWith(ending))) {
+
+    // 3. Known Masculine Exceptions ending in -a
+    const mascExceptions = ["día", "dia", "mapa", "sofá", "sofa", "problema", "sistema", "idioma", "planeta"];
+    if (mascExceptions.includes(normalizedWord)) return false;
+
+    return true;
+  }
+
+  // 4. Other words are typically masculine
+  return false;
+}
+
+export function getDaysDiff(d1: Date, d2: Date): number {
+  const msInDay = 24 * 60 * 60 * 1000;
+  return Math.round(Math.abs(d1.getTime() - d2.getTime()) / msInDay);
+}

@@ -84,6 +84,10 @@
     "adminEmail": "Admin Email",
     "adminPassword": "Admin Password",
     "min6chars": "Minimum 6 characters",
+    "phone": "Phone",
+    "address": "Address",
+    "contactName": "Contact Name",
+    "email": "Email",
     "domainRegex": "Only lowercase letters, numbers, and hyphens",
     "creating": "Creating...",
     "saveProvision": "Save & Provision"
@@ -196,7 +200,20 @@
     "typeManagement": "Manage Types",
     "color": "Color",
     "councilEvent": "Council Event",
-    "churchEvent": "Local Activity"
+    "churchEvent": "Local Activity",
+    "generateInvitation": "Generate Invitation",
+    "generatePDF": "Generate PDF",
+    "generating": "Generating...",
+    "verseText": "Verse Text",
+    "verseReference": "Verse Reference",
+    "activityTheme": "Activity Custom Theme (opcional)",
+    "generateError": "Error generating invitation. Please try again.",
+    "popupBlocked": "Please allow pop-ups to generate the invitation.",
+    "book": "Book",
+    "chapter": "Chapter",
+    "verse": "Verse",
+    "loadingVerse": "Loading verse...",
+    "verseNotFound": "Verse not found"
   },
   "changePassword": {
     "title": "Change Password",

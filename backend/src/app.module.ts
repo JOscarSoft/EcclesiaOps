@@ -13,6 +13,7 @@ import { ActivitiesModule } from './modules/tenant/activities/activities.module'
 import { StatsModule } from './modules/tenant/stats/stats.module';
 import { TenantMiddleware } from './modules/tenants/tenant.middleware';
 import { PlatformUsersModule } from './modules/platform/users/users.module';
+import { BibleModule } from './modules/platform/bible/bible.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PlatformUsersModule } from './modules/platform/users/users.module';
     ActivitiesModule,
     StatsModule,
     PlatformUsersModule,
+    BibleModule,
   ],
   controllers: [],
   providers: [],

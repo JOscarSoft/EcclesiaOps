@@ -84,6 +84,10 @@
     "adminEmail": "Email del Admin",
     "adminPassword": "Contraseña del Admin",
     "min6chars": "Mínimo 6 caracteres",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "contactName": "Nombre de Contacto",
+    "email": "Correo Electrónico",
     "domainRegex": "Solo letras minúsculas, números y guiones",
     "creating": "Creando...",
     "saveProvision": "Guardar y Aprovisionar"
@@ -196,7 +200,20 @@
     "typeManagement": "Gestionar Tipos",
     "color": "Color",
     "councilEvent": "Actividad Conciliar",
-    "churchEvent": "Actividad Local"
+    "churchEvent": "Actividad Local",
+    "generateInvitation": "Generar Invitación",
+    "generatePDF": "Generar PDF",
+    "generating": "Generando...",
+    "verseText": "Texto del Versículo",
+    "verseReference": "Referencia del Versículo",
+    "activityTheme": "Tema de la Actividad (opcional)",
+    "generateError": "Error al generar la invitación. Intente de nuevo.",
+    "popupBlocked": "Permita ventanas emergentes para generar la invitación.",
+    "book": "Libro",
+    "chapter": "Capítulo",
+    "verse": "Versículo",
+    "loadingVerse": "Cargando versículo...",
+    "verseNotFound": "Versículo no encontrado"
   },
   "changePassword": {
     "title": "Cambiar Contraseña",

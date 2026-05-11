@@ -8,13 +8,21 @@ import { Roles } from '../../../common/decorators/roles.decorator';
 
 @ApiTags('Platform - Councils')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('SUPER_ADMIN')
 @Controller('platform/councils')
 export class CouncilsController {
   constructor(private readonly councilsService: CouncilsService) {}
-  
+
+  @Get('by-domain/:domain')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Obtener un concilio por dominio' })
+  @ApiParam({ name: 'domain', description: 'Dominio del concilio' })
+  findByDomain(@Param('domain') domain: string) {
+    return this.councilsService.findByDomain(domain);
+  }
+
   @Get('stats/summary')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Obtener estadísticas globales de la plataforma' })
   @ApiResponse({ status: 200, description: 'Estadísticas globales' })
   getStats() {
@@ -22,6 +30,8 @@ export class CouncilsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Listar todos los concilios (tenants)' })
   @ApiResponse({ status: 200, description: 'Lista de concilios' })
   findAll() {
@@ -29,6 +39,8 @@ export class CouncilsController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Obtener un concilio por ID' })
   @ApiParam({ name: 'id', description: 'ID del concilio' })
   @ApiResponse({ status: 200, description: 'Datos del concilio' })
@@ -38,13 +50,20 @@ export class CouncilsController {
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Crear un nuevo concilio (tenant)' })
   @ApiResponse({ status: 201, description: 'Concilio creado exitosamente' })
   createCouncil(@Body() dto: CreateCouncilDto) {
-    return this.councilsService.createCouncil(dto.name, dto.domain, dto.adminEmail, dto.adminPassword);
+    return this.councilsService.createCouncil(
+      dto.name, dto.domain, dto.adminEmail, dto.adminPassword,
+      dto.phone, dto.address, dto.contactName, dto.email,
+    );
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Actualizar un concilio' })
   @ApiParam({ name: 'id', description: 'ID del concilio' })
   @ApiResponse({ status: 200, description: 'Concilio actualizado exitosamente' })
@@ -53,6 +72,8 @@ export class CouncilsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('SUPER_ADMIN')
   @ApiOperation({ summary: 'Eliminar un concilio' })
   @ApiParam({ name: 'id', description: 'ID del concilio' })
   @ApiResponse({ status: 200, description: 'Concilio eliminado' })

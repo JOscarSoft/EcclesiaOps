@@ -13,15 +13,19 @@ export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { o
   const schema = useMemo(() => z.object({
     name: z.string().min(1, t('common.required')),
     domain: z.string().min(3, t('common.required')).regex(/^[a-z0-9-]+$/, t('councils.domainRegex')),
-    adminEmail: z.string().email(t('common.invalidEmail')).optional(),
-    adminPassword: z.string().min(6, t('councils.min6chars')).optional(),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    contactName: z.string().optional(),
+    email: z.string().optional(),
+    adminEmail: z.string().email(t('common.invalidEmail')).or(z.literal('')).optional(),
+    adminPassword: z.string().min(6, t('councils.min6chars')).or(z.literal('')).optional(),
   }), [t]);
 
   type FormValues = z.infer<typeof schema>;
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', domain: '', adminEmail: '', adminPassword: '' }
+    defaultValues: { name: '', domain: '', phone: '', address: '', contactName: '', email: '', adminEmail: '', adminPassword: '' }
   });
 
   useEffect(() => {
@@ -29,6 +33,10 @@ export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { o
       reset({
         name: initialData?.name || '',
         domain: initialData?.domain || '',
+        phone: initialData?.phone || '',
+        address: initialData?.address || '',
+        contactName: initialData?.contactName || '',
+        email: initialData?.email || '',
         adminEmail: '',
         adminPassword: '',
       });
@@ -38,7 +46,13 @@ export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { o
   const mutation = useMutation({
     mutationFn: async (data: FormValues) => {
       if (initialData?._id) {
-        return api.put(`/platform/councils/${initialData._id}`, { name: data.name, domain: data.domain });
+        return api.put(`/platform/councils/${initialData._id}`, {
+          name: data.name, domain: data.domain,
+          phone: data.phone || undefined,
+          address: data.address || undefined,
+          contactName: data.contactName || undefined,
+          email: data.email || undefined,
+        });
       }
       return api.post('/platform/councils', data);
     },
@@ -62,6 +76,22 @@ export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { o
           <TextField
             margin="dense" label={t('councils.domain')} fullWidth
             error={!!errors.domain} helperText={errors.domain?.message} {...register('domain')}
+          />
+          <TextField
+            margin="dense" label={t('councils.phone')} fullWidth
+            {...register('phone')}
+          />
+          <TextField
+            margin="dense" label={t('councils.address')} fullWidth
+            {...register('address')}
+          />
+          <TextField
+            margin="dense" label={t('councils.contactName')} fullWidth
+            {...register('contactName')}
+          />
+          <TextField
+            margin="dense" label={t('councils.email')} fullWidth
+            {...register('email')}
           />
 
           {!initialData && (
