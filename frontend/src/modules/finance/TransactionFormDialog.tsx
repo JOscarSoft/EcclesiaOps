@@ -24,7 +24,7 @@ export const TransactionFormDialog = ({
     date: z.string().min(1, t('common.required')),
     category: z.string().min(1, t('common.required')),
     description: z.string().optional(),
-    church: z.string().min(1, t('common.required')),
+    church: z.string().optional(),
     // Specific fields
     member: z.string().optional(),
     method: z.string().optional(),
@@ -78,7 +78,7 @@ export const TransactionFormDialog = ({
   });
 
   const mutation = useMutation({
-    mutationFn: async (data: any) => api.post('/tenant/finance/transactions', data),
+    mutationFn: async (data: any) => api.post('/tenant/finance/transactions', { ...data, church: data.church || null }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['finance-balance'] });
       queryClient.invalidateQueries({ queryKey: ['finance-transactions'] });
@@ -121,8 +121,9 @@ export const TransactionFormDialog = ({
                   fullWidth
                   {...field}
                   error={!!errors.church}
-                  disabled={!!user?.churchId} // Bloqueado si el usuario ya pertenece a una iglesia específica
+                  disabled={!!user?.churchId}
                 >
+                  {!user?.churchId && <MenuItem value="">{t('finance.council')}</MenuItem>}
                   {churches.map((c: any) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
                 </TextField>
               )}

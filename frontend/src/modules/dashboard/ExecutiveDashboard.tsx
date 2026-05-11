@@ -168,6 +168,11 @@ export const ExecutiveDashboard = () => {
     type: c.type
   })) || [];
 
+  const churchData = churches?.map((c: any) => ({
+    ...c,
+    _id: c._id || t('finance.council'),
+  })) || [];
+
   return (
     <Box component="main">
       <SEO title={t('analytics.title')} />
@@ -356,7 +361,7 @@ export const ExecutiveDashboard = () => {
               <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>{t('analytics.churchPerformance')}</Typography>
                 <Stack direction="row" spacing={1}>
-                  <IconButton size="small" onClick={() => exportToCSV(churches, 'detalle_iglesias')}>
+                  <IconButton size="small" onClick={() => exportToCSV(churchData, 'detalle_iglesias')}>
                     <DownloadIcon fontSize="small" />
                   </IconButton>
                   <ChurchIcon color="disabled" />
@@ -364,7 +369,7 @@ export const ExecutiveDashboard = () => {
               </Stack>
               <Box sx={{ height: 300 }}>
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={churches}>
+                  <BarChart data={churchData}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
                     <XAxis dataKey="_id" />
                     <YAxis />

@@ -16,6 +16,8 @@ import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { MemberFormDialog } from './MemberFormDialog';
+import { MembersReportDialog } from './MembersReportDialog';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import { SEO } from '../../components/common/SEO';
 
 const STATUS_COLORS: Record<string, 'success' | 'warning' | 'default'> = {
@@ -31,6 +33,7 @@ export const MembersList = () => {
   const canManage = user?.role === 'SUPER_ADMIN' || user?.permissions?.includes('MANAGE_MEMBERS');
 
   const [open, setOpen] = useState(false);
+  const [openReports, setOpenReports] = useState(false);
   const [selectedMember, setSelectedMember] = useState<any>(null);
   const [filters, setFilters] = useState({ status: '', gender: '', ministry: '', search: '' });
 
@@ -171,11 +174,16 @@ export const MembersList = () => {
       {/* Header */}
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>{t('members.title')}</Typography>
-        {canManage && (
-          <Button variant="contained" startIcon={<AddIcon />} onClick={() => { setSelectedMember(null); setOpen(true); }}>
-            {t('members.newMember')}
+        <Stack direction="row" spacing={1}>
+          <Button variant="outlined" startIcon={<AssessmentIcon />} onClick={() => setOpenReports(true)}>
+            Reportes
           </Button>
-        )}
+          {canManage && (
+            <Button variant="contained" startIcon={<AddIcon />} onClick={() => { setSelectedMember(null); setOpen(true); }}>
+              {t('members.newMember')}
+            </Button>
+          )}
+        </Stack>
       </Box>
 
       {/* Filters */}
@@ -220,6 +228,7 @@ export const MembersList = () => {
       </Paper>
 
       <MemberFormDialog open={open} onClose={() => setOpen(false)} onSuccess={refetch} initialData={selectedMember} />
+      <MembersReportDialog open={openReports} onClose={() => setOpenReports(false)} />
     </Box>
   );
 };

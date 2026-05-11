@@ -135,7 +135,29 @@
     "noAttendance": "No attendance records",
     "sunday": "Sunday",
     "midweek": "Midweek",
-    "special": "Special"
+    "special": "Special",
+    "reports": {
+      "title": "Reports",
+      "selectType": "Report Type",
+      "directory": "Full Directory",
+      "byStatus": "By Status",
+      "byGender": "By Gender",
+      "byMinistry": "By Ministry",
+      "ageRanges": "Age Ranges",
+      "baptized": "Baptized",
+      "familyGroups": "Family Groups",
+      "byChurch": "By Church",
+      "newBelievers": "New Believers",
+      "exportCSV": "Export CSV",
+      "exportPDF": "Export PDF",
+      "noData": "No data for this report",
+      "records": "records",
+      "count": "Count",
+      "members": "Members",
+      "ageRange": "Age Range",
+      "withoutGroup": "Without Group",
+      "withoutMinistry": "Without Ministry"
+    }
   },
   "ministries": {
     "title": "Ministries",
@@ -178,7 +200,8 @@
     "mission": "Missions",
     "construction": "Construction",
     "special": "Special",
-    "church": "Church"
+    "church": "Church",
+    "council": "Council"
   },
   "activities": {
     "title": "Activities",

@@ -21,7 +21,8 @@ export class AuthService {
   ) { }
 
   async platformLogin(username: string, passwordRaw: string) {
-    const user = await this.platformUserModel.findOne({ username });
+    const escaped = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const user = await this.platformUserModel.findOne({ username: { $regex: new RegExp(`^${escaped}$`, 'i') } });
     if (!user) throw new UnauthorizedException('Credenciales invlidas!!!');
 
     const isValid = await bcrypt.compare(passwordRaw, user.passwordHash);
@@ -48,7 +49,8 @@ export class AuthService {
     const ChurchModel = connection.model<Church>(Church.name, ChurchSchema);
     const PermissionModel = connection.model<Permission>(Permission.name, PermissionSchema);
 
-    const user = await UserModel.findOne({ username }).populate({
+    const escaped = username.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const user = await UserModel.findOne({ username: { $regex: new RegExp(`^${escaped}$`, 'i') } }).populate({
       path: 'role',
       model: RoleModel,
       populate: {

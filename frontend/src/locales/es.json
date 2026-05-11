@@ -135,7 +135,29 @@
     "noAttendance": "Sin registros de asistencia",
     "sunday": "Domingo",
     "midweek": "Entre semana",
-    "special": "Especial"
+    "special": "Especial",
+    "reports": {
+      "title": "Reportes",
+      "selectType": "Tipo de Reporte",
+      "directory": "Directorio Completo",
+      "byStatus": "Por Estado",
+      "byGender": "Por Género",
+      "byMinistry": "Por Ministerio",
+      "ageRanges": "Rangos de Edad",
+      "baptized": "Bautizados",
+      "familyGroups": "Grupos Familiares",
+      "byChurch": "Por Iglesia",
+      "newBelievers": "Nuevos Creyentes",
+      "exportCSV": "Exportar CSV",
+      "exportPDF": "Exportar PDF",
+      "noData": "Sin datos para este reporte",
+      "records": "registros",
+      "count": "Cantidad",
+      "members": "Miembros",
+      "ageRange": "Rango de Edad",
+      "withoutGroup": "Sin Grupo",
+      "withoutMinistry": "Sin Ministerio"
+    }
   },
   "ministries": {
     "title": "Ministerios",
@@ -178,7 +200,8 @@
     "mission": "Misiones",
     "construction": "Construcción",
     "special": "Especial",
-    "church": "Iglesia"
+    "church": "Iglesia",
+    "council": "Conciliar"
   },
   "activities": {
     "title": "Actividades",

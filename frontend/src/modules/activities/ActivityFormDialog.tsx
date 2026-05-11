@@ -10,6 +10,7 @@ import { api } from '../../core/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
+import { DateTimeField } from '../../components/common/DateTimeField';
 
 export const ActivityFormDialog = ({
   open, onClose, onSuccess, initialData
@@ -40,8 +41,8 @@ export const ActivityFormDialog = ({
         reset({
           title: initialData.title,
           description: initialData.description || '',
-          startDate: new Date(initialData.startDate).toISOString().substring(0, 16),
-          endDate: new Date(initialData.endDate).toISOString().substring(0, 16),
+          startDate: new Date(initialData.startDate).toISOString(),
+          endDate: new Date(initialData.endDate).toISOString(),
           location: initialData.location || '',
           activityType: initialData.activityType?._id || initialData.activityType || '',
           church: initialData.church?._id || initialData.church || '',
@@ -51,8 +52,8 @@ export const ActivityFormDialog = ({
           title: '',
           description: '',
           activityType: '',
-          startDate: new Date().toISOString().substring(0, 16),
-          endDate: new Date(Date.now() + 3600000).toISOString().substring(0, 16),
+          startDate: new Date().toISOString(),
+          endDate: new Date(Date.now() + 3600000).toISOString(),
           church: user?.churchId || ''
         });
       }
@@ -88,22 +89,22 @@ export const ActivityFormDialog = ({
       <form onSubmit={handleSubmit((data) => mutation.mutate(data))}>
         <DialogContent dividers>
           <Stack spacing={3}>
-            <TextField 
-              label={t('activities.activityTitle')} 
-              fullWidth 
-              {...register('title')} 
-              error={!!errors.title} 
+            <TextField
+              label={t('activities.activityTitle')}
+              fullWidth
+              {...register('title')}
+              error={!!errors.title}
             />
 
             <Controller
               name="church"
               control={control}
               render={({ field }) => (
-                <TextField 
-                  select 
-                  label={t('finance.church')} 
-                  fullWidth 
-                  {...field} 
+                <TextField
+                  select
+                  label={t('finance.church')}
+                  fullWidth
+                  {...field}
                   error={!!errors.church}
                   disabled={!!user?.churchId}
                 >
@@ -114,19 +115,19 @@ export const ActivityFormDialog = ({
             />
 
             <Stack direction="row" spacing={2}>
-              <TextField 
-                label={t('activities.startDate')} 
-                type="datetime-local" 
-                fullWidth 
-                slotProps={{ inputLabel: { shrink: true } }} 
-                {...register('startDate')} 
+              <Controller
+                name="startDate"
+                control={control}
+                render={({ field }) => (
+                  <DateTimeField size="small" label={t('activities.startDate')} sx={{ flex: 1 }} {...field} />
+                )}
               />
-              <TextField 
-                label={t('activities.endDate')} 
-                type="datetime-local" 
-                fullWidth 
-                slotProps={{ inputLabel: { shrink: true } }} 
-                {...register('endDate')} 
+              <Controller
+                name="endDate"
+                control={control}
+                render={({ field }) => (
+                  <DateTimeField size="small" label={t('activities.endDate')} sx={{ flex: 1 }} {...field} />
+                )}
               />
             </Stack>
 

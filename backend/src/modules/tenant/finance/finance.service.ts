@@ -23,9 +23,16 @@ export class FinanceService {
   }
 
   // --- TRANSACTIONS ---
-  async findAllTransactions(churchId?: string, filters: { from?: string, to?: string } = {}) {
+  async findAllTransactions(churchId?: string, filters: { from?: string, to?: string, church?: string, category?: string, kind?: string } = {}) {
     const query: any = { isDeleted: false };
-    if (churchId) query.church = churchId;
+
+    if (filters.church === '__null__') {
+      query.church = null;
+    } else if (filters.church) {
+      query.church = filters.church;
+    } else if (churchId) {
+      query.church = churchId;
+    }
 
     if (filters.from || filters.to) {
       query.date = {};
@@ -33,8 +40,12 @@ export class FinanceService {
       if (filters.to) query.date.$lte = new Date(filters.to);
     }
 
+    if (filters.category) query.category = filters.category;
+    if (filters.kind) query.kind = filters.kind;
+
     return this.financeModel.find(query)
       .populate('category')
+      .populate('church', 'name')
       .populate('member', 'firstName lastName')
       .sort({ date: -1 })
       .exec();

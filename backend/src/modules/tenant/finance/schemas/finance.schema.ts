@@ -21,7 +21,7 @@ export class Finance extends Document {
   category: Types.ObjectId;
   kind: string;
   description: string;
-  church: Types.ObjectId;
+  church?: Types.ObjectId | null;
   isDeleted: boolean;
 }
 
@@ -31,7 +31,7 @@ export const FinanceSchema = new Schema({
   category: { type: Schema.Types.ObjectId, ref: 'FinanceCategory', required: true },
   kind: { type: String, enum: ['Income', 'Expense'], required: true },
   description: { type: String },
-  church: { type: Schema.Types.ObjectId, ref: 'Church', required: true },
+  church: { type: Schema.Types.ObjectId, ref: 'Church', required: false, default: null },
   isDeleted: { type: Boolean, default: false },
 }, { timestamps: true, discriminatorKey: 'kind', collection: 'finance' });
 

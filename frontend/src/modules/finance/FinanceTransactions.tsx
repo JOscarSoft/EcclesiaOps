@@ -1,4 +1,4 @@
-import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Tooltip, Stack, Button } from '@mui/material';
+import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Chip, IconButton, Tooltip, Stack, Button, TextField, MenuItem } from '@mui/material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
@@ -17,17 +17,36 @@ export const FinanceTransactions = () => {
   const queryClient = useQueryClient();
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
+  const [churchFilter, setChurchFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('');
+  const [kindFilter, setKindFilter] = useState('');
   const [open, setOpen] = useState(false);
 
   const { user } = useAuthStore();
 
   const canManage = user?.role === 'SUPER_ADMIN' || user?.permissions?.includes('MANAGE_FINANCE');
 
+  const { data: churches = [] } = useQuery({
+    queryKey: ['churches'],
+    queryFn: async () => (await api.get('/tenant/churches')).data,
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ['finance-categories'],
+    queryFn: async () => (await api.get('/tenant/finance/categories')).data,
+  });
+
   const { data: transactions, isLoading, refetch } = useQuery({
-    queryKey: ['finance-transactions', fromDate, toDate],
-    queryFn: async () => (await api.get('/tenant/finance/transactions', {
-      params: { from: fromDate, to: toDate }
-    })).data,
+    queryKey: ['finance-transactions', fromDate, toDate, churchFilter, categoryFilter, kindFilter],
+    queryFn: async () => {
+      const params: any = {};
+      if (fromDate) params.from = fromDate;
+      if (toDate) params.to = toDate;
+      if (churchFilter) params.church = churchFilter;
+      if (categoryFilter) params.category = categoryFilter;
+      if (kindFilter) params.kind = kindFilter;
+      return (await api.get('/tenant/finance/transactions', { params })).data;
+    },
   });
 
   const deleteMutation = useMutation({
@@ -40,10 +59,11 @@ export const FinanceTransactions = () => {
 
   const exportToCSV = () => {
     if (!transactions || !transactions.length) return;
-    const headers = ['Fecha', 'Categoría', 'Tipo', 'Monto', 'Miembro', 'Descripción'].join(',');
+    const headers = ['Fecha', 'Categoría', 'Iglesia', 'Tipo', 'Monto', 'Miembro', 'Descripción'].join(',');
     const rows = transactions.map((t: any) => [
       formatDate(t.date),
       t.category?.name || 'N/A',
+      t.church?.name || t('finance.council'),
       t.kind === 'Expense' ? 'Gasto' : 'Ingreso',
       t.amount,
       t.member ? `${t.member.firstName} ${t.member.lastName}` : 'N/A',
@@ -66,7 +86,7 @@ export const FinanceTransactions = () => {
 
   return (
     <Box>
-      <Stack direction="row" spacing={2} sx={{ mb: 3, alignItems: 'center' }}>
+      <Stack direction="row" spacing={2} sx={{ mb: 3, alignItems: 'center', flexWrap: 'wrap' }}>
         <DateField
           label="Desde"
           size="small"
@@ -87,6 +107,41 @@ export const FinanceTransactions = () => {
             '& .MuiInputBase-input': { color: 'text.primary' }
           }}
         />
+        <TextField
+          select
+          label="Iglesia"
+          size="small"
+          value={churchFilter}
+          onChange={(e) => setChurchFilter(e.target.value)}
+          sx={{ minWidth: 140 }}
+        >
+          <MenuItem value="">Todas</MenuItem>
+          <MenuItem value="__null__">{t('finance.council')}</MenuItem>
+          {churches.map((c: any) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
+        </TextField>
+        <TextField
+          select
+          label="Categoría"
+          size="small"
+          value={categoryFilter}
+          onChange={(e) => setCategoryFilter(e.target.value)}
+          sx={{ minWidth: 160 }}
+        >
+          <MenuItem value="">Todas</MenuItem>
+          {categories.map((c: any) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}
+        </TextField>
+        <TextField
+          select
+          label="Tipo"
+          size="small"
+          value={kindFilter}
+          onChange={(e) => setKindFilter(e.target.value)}
+          sx={{ minWidth: 130 }}
+        >
+          <MenuItem value="">Todos</MenuItem>
+          <MenuItem value="Income">Ingreso</MenuItem>
+          <MenuItem value="Expense">Egreso</MenuItem>
+        </TextField>
         <Button
           variant="outlined"
           startIcon={<DownloadIcon />}
@@ -95,6 +150,11 @@ export const FinanceTransactions = () => {
         >
           Exportar CSV
         </Button>
+        {(fromDate || toDate || churchFilter || categoryFilter || kindFilter) && (
+          <Button size="small" onClick={() => { setFromDate(''); setToDate(''); setChurchFilter(''); setCategoryFilter(''); setKindFilter(''); }}>
+            Limpiar
+          </Button>
+        )}
       </Stack>
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         {canManage && (
@@ -110,6 +170,7 @@ export const FinanceTransactions = () => {
             <TableRow>
               <TableCell sx={{ fontWeight: 800 }}>{t('finance.date')}</TableCell>
               <TableCell sx={{ fontWeight: 800 }}>{t('finance.category')}</TableCell>
+              <TableCell sx={{ fontWeight: 800 }}>{t('finance.church')}</TableCell>
               <TableCell sx={{ fontWeight: 800 }}>{t('finance.type')}</TableCell>
               <TableCell sx={{ fontWeight: 800 }}>{t('finance.amount')}</TableCell>
               <TableCell sx={{ fontWeight: 800 }}>{t('menu.members')}</TableCell>
@@ -118,11 +179,12 @@ export const FinanceTransactions = () => {
           </TableHead>
           <TableBody>
             {isLoading ? (
-              <TableRow><TableCell colSpan={6} align="center">Cargando...</TableCell></TableRow>
+              <TableRow><TableCell colSpan={7} align="center">Cargando...</TableCell></TableRow>
             ) : transactions?.map((transaction: any) => (
               <TableRow key={transaction._id} hover>
                 <TableCell>{formatDate(transaction.date)}</TableCell>
                 <TableCell>{transaction.category?.name}</TableCell>
+                <TableCell>{transaction.church?.name || t('finance.council')}</TableCell>
                 <TableCell>
                   <Chip
                     label={transaction.kind === 'Expense' ? 'Egreso' : 'Ingreso'}
