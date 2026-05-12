@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useParams, useNavigate } from 'react-router-dom';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
-import { formatDate } from '../../utils/format';
+import { formatDate, formatPhone } from '../../utils/format';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EditIcon from '@mui/icons-material/Edit';
 import PersonIcon from '@mui/icons-material/Person';
@@ -124,7 +124,7 @@ export const MemberDetail = () => {
               <PhoneIcon fontSize="small" color="primary" /> {t('members.contactInfo')}
             </Typography>
             <Divider sx={{ mb: 1.5 }} />
-            <InfoRow icon={<PhoneIcon fontSize="small" />} label={t('members.phone')} value={member.phone} />
+            <InfoRow icon={<PhoneIcon fontSize="small" />} label={t('members.phone')} value={formatPhone(member.phone)} />
             <InfoRow icon={<EmailIcon fontSize="small" />} label={t('members.email')} value={member.email} />
             <InfoRow icon={<PersonIcon fontSize="small" />} label={t('members.address')} value={member.address} />
           </Paper>

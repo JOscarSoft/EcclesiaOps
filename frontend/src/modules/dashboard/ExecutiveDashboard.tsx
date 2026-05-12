@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
-import { 
+import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, Legend
 } from 'recharts';
@@ -25,6 +25,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'
 export const ExecutiveDashboard = () => {
   const { t } = useTranslation();
   const { user } = useAuthStore();
+
   const isCouncil = !user?.churchId;
 
   const { data: summary, isLoading: loadingSummary } = useQuery({
@@ -81,7 +82,7 @@ export const ExecutiveDashboard = () => {
     const now = formatDate(new Date());
 
     doc.setFontSize(20);
-    doc.text(`Reporte Ejecutivo EcclesiaOps`, 14, 22);
+    doc.text(`Reporte Ejecutivo - ${user?.churchName ?? 'EcclesiaOps'}`, 14, 22);
     doc.setFontSize(10);
     doc.text(`${t('analytics.generatedAt')}: ${now} | ${t('analytics.periodLastYear')}`, 14, 30);
 
@@ -144,11 +145,11 @@ export const ExecutiveDashboard = () => {
   };
 
   if (loadingSummary || loadingTrends || loadingDemo || loadingCat || (isCouncil && loadingChurches)) {
-     return (
-       <Box sx={{ display: 'flex', justifyContent: 'center', p: 10 }}>
-         <CircularProgress />
-       </Box>
-     );
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 10 }}>
+        <CircularProgress />
+      </Box>
+    );
   }
 
   const trendData = trends?.map((t: any) => ({
@@ -182,8 +183,8 @@ export const ExecutiveDashboard = () => {
           <Typography color="text.secondary">{t('analytics.subtitle')}</Typography>
         </Box>
         <Stack direction="row" spacing={2}>
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             color="primary"
             startIcon={<PictureAsPdfIcon />}
             onClick={generatePDF}
@@ -272,17 +273,17 @@ export const ExecutiveDashboard = () => {
                 <AreaChart data={trendData}>
                   <defs>
                     <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                      <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
                   <XAxis dataKey="name" />
-                  <YAxis tickFormatter={(val) => `$${val/1000}k`} />
+                  <YAxis tickFormatter={(val) => `$${val / 1000}k`} />
                   <Tooltip formatter={(val: any) => formatCurrency(Number(val))} />
                   <Legend />
                   <Area type="monotone" dataKey="income" stroke="#82ca9d" fillOpacity={1} fill="url(#colorIncome)" name={t('finance.income')} />

@@ -6,6 +6,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PhoneField } from '../../components/common/PhoneField';
 
 export const ChurchFormDialog = ({ open, onClose, onSuccess, initialData }: { open: boolean, onClose: () => void, onSuccess: () => void, initialData?: any }) => {
   const { t } = useTranslation();
@@ -70,7 +71,13 @@ export const ChurchFormDialog = ({ open, onClose, onSuccess, initialData }: { op
         <DialogContent dividers>
           <TextField autoFocus margin="dense" label={t('churches.name')} fullWidth error={!!errors.name} helperText={errors.name?.message} {...register('name')} />
           <TextField margin="dense" label={t('churches.address')} fullWidth {...register('address')} />
-          <TextField margin="dense" label={t('churches.phone')} fullWidth {...register('phone')} />
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneField margin="dense" label={t('churches.phone')} fullWidth {...field} />
+            )}
+          />
           <TextField margin="dense" label={t('churches.email')} fullWidth error={!!errors.email} helperText={errors.email?.message} {...register('email')} />
           {initialData?._id && (
             <Controller

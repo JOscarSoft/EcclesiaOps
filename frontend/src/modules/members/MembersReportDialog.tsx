@@ -7,7 +7,7 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useTranslation } from 'react-i18next';
-import { formatDate } from '../../utils/format';
+import { formatDate, formatPhone } from '../../utils/format';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import DownloadIcon from '@mui/icons-material/Download';
@@ -74,7 +74,7 @@ const buildReport = (members: any[], type: ReportType, t: (key: string) => strin
         m.gender === 'MALE' ? t('members.male') : m.gender === 'FEMALE' ? t('members.female') : '-',
         m.status ? t(`members.status${m.status.charAt(0) + m.status.slice(1).toLowerCase()}` as any) || m.status : '-',
         m.baptized ? t('members.yes') : t('members.no'),
-        m.phone || '-',
+        formatPhone(m.phone) || '-',
         m.email || '-',
         m.church?.name || '-',
         (m.ministries || []).map((min: any) => min.name).join(', ') || '-',
@@ -89,7 +89,7 @@ const buildReport = (members: any[], type: ReportType, t: (key: string) => strin
         formatMemberName(m),
         String(calculateAge(m.birthDate) ?? '-'),
         m.gender === 'MALE' ? t('members.male') : m.gender === 'FEMALE' ? t('members.female') : '-',
-        m.phone || '-',
+        formatPhone(m.phone) || '-',
       ]);
       return { columns, rows };
     }
@@ -101,7 +101,7 @@ const buildReport = (members: any[], type: ReportType, t: (key: string) => strin
         formatMemberName(m),
         String(calculateAge(m.birthDate) ?? '-'),
         m.status ? t(`members.status${m.status.charAt(0) + m.status.slice(1).toLowerCase()}` as any) || m.status : '-',
-        m.phone || '-',
+        formatPhone(m.phone) || '-',
       ]);
       return { columns, rows };
     }
@@ -151,7 +151,7 @@ const buildReport = (members: any[], type: ReportType, t: (key: string) => strin
         m.familyGroup || t('members.reports.withoutGroup'),
         formatMemberName(m),
         String(calculateAge(m.birthDate) ?? '-'),
-        m.phone || '-',
+        formatPhone(m.phone) || '-',
       ]);
       return { columns, rows };
     }
@@ -163,7 +163,7 @@ const buildReport = (members: any[], type: ReportType, t: (key: string) => strin
         formatMemberName(m),
         String(calculateAge(m.birthDate) ?? '-'),
         m.status ? t(`members.status${m.status.charAt(0) + m.status.slice(1).toLowerCase()}` as any) || m.status : '-',
-        m.phone || '-',
+        formatPhone(m.phone) || '-',
       ]);
       return { columns, rows };
     }
@@ -179,7 +179,7 @@ const buildReport = (members: any[], type: ReportType, t: (key: string) => strin
         formatMemberName(m),
         formatDate(m.joinDate),
         String(calculateAge(m.birthDate) ?? '-'),
-        m.phone || '-',
+        formatPhone(m.phone) || '-',
       ]);
       return { columns, rows };
     }

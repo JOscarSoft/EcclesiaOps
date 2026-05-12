@@ -18,7 +18,7 @@ import { Council, CouncilSchema } from '../platform/councils/schemas/council.sch
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
-        signOptions: { expiresIn: '15m' },
+        signOptions: { expiresIn: '1d' },
       }),
     }),
     MongooseModule.forFeature([

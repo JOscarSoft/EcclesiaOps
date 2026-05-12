@@ -10,6 +10,7 @@ import { api } from '../../core/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { DateField } from '../../components/common/DateField';
+import { PhoneField } from '../../components/common/PhoneField';
 import { useAuthStore } from '../../stores/authStore';
 
 export const MemberFormDialog = ({
@@ -218,7 +219,13 @@ export const MemberFormDialog = ({
           {/* Contact */}
           <SectionLabel label={t('members.contactInfo')} />
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField size="small" label={t('members.phone')} fullWidth {...register('phone')} />
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneField size="small" label={t('members.phone')} fullWidth {...field} />
+              )}
+            />
             <TextField size="small" label={t('members.email')} fullWidth error={!!errors.email} helperText={errors.email?.message} {...register('email')} />
           </Stack>
           <TextField size="small" label={t('members.address')} fullWidth {...register('address')} sx={{ mt: 1.5 }} />

@@ -1,11 +1,12 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, Box, Typography } from '@mui/material';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { api } from '../../core/api';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { PhoneField } from '../../components/common/PhoneField';
 
 export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { open: boolean, onClose: () => void, onSuccess: () => void, initialData?: any }) => {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { o
 
   type FormValues = z.infer<typeof schema>;
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormValues>({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { name: '', domain: '', phone: '', address: '', contactName: '', email: '', adminEmail: '', adminPassword: '' }
   });
@@ -77,9 +78,12 @@ export const CouncilFormDialog = ({ open, onClose, onSuccess, initialData }: { o
             margin="dense" label={t('councils.domain')} fullWidth
             error={!!errors.domain} helperText={errors.domain?.message} {...register('domain')}
           />
-          <TextField
-            margin="dense" label={t('councils.phone')} fullWidth
-            {...register('phone')}
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneField margin="dense" label={t('councils.phone')} fullWidth {...field} />
+            )}
           />
           <TextField
             margin="dense" label={t('councils.address')} fullWidth

@@ -9,7 +9,7 @@ import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../stores/authStore';
 import { api } from '../../core/api';
-import { formatDate, getDaysDiff, isSpanishFeminine } from '../../utils/format';
+import { formatDate, getDaysDiff, isSpanishFeminine, formatPhone } from '../../utils/format';
 import PrintIcon from '@mui/icons-material/Print';
 import { ACTIVITY_TEMPLATE } from './activityTemplate';
 
@@ -115,7 +115,7 @@ export const InvitationModal = ({
         try {
           const { data: churchData } = await api.get(`/tenant/churches/${activity.church._id}`);
           churchAddress = churchData.address || '';
-          churchPhone = churchData.phone || '';
+          churchPhone = formatPhone(churchData.phone) || '';
           const pastor = churchData.pastor;
           if (pastor) {
             pastorName = `${pastor.firstName || ''} ${pastor.lastName || ''}`.trim();
@@ -127,7 +127,7 @@ export const InvitationModal = ({
         try {
           const { data: councilData } = await api.get(`/platform/councils/by-domain/${user.tenantId}`);
           churchAddress = councilData.address || '';
-          churchPhone = councilData.phone || '';
+          churchPhone = formatPhone(councilData.phone) || '';
           pastorName = councilData.contactName || '';
         } catch {
           // proceed with empty values

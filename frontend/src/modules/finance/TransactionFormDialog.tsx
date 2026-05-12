@@ -117,11 +117,11 @@ export const TransactionFormDialog = ({
               render={({ field }) => (
                 <TextField
                   select
-                  label={t('finance.church') || t('churches.title')}
+                  label={!user?.churchId ? t('finance.council') : t('finance.church') || t('churches.title')}
                   fullWidth
                   {...field}
                   error={!!errors.church}
-                  disabled={!!user?.churchId}
+                  disabled={true}
                 >
                   {!user?.churchId && <MenuItem value="">{t('finance.council')}</MenuItem>}
                   {churches.map((c: any) => <MenuItem key={c._id} value={c._id}>{c.name}</MenuItem>)}

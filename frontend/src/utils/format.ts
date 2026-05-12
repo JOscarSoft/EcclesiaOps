@@ -44,3 +44,12 @@ export function getDaysDiff(d1: Date, d2: Date): number {
   const msInDay = 24 * 60 * 60 * 1000;
   return Math.round(Math.abs(d1.getTime() - d2.getTime()) / msInDay);
 }
+
+export const formatPhone = (value?: string): string => {
+  const digits = (value || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.length <= 3) return `(${digits}`;
+  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+  if (digits.length <= 10) return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
+  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)} ${digits.slice(10)}`;
+};
