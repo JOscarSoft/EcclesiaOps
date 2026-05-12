@@ -28,7 +28,8 @@
     "invalidEmail": "Email inválido",
     "name": "Nombre",
     "none": "Ninguno",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "error": "Ocurrió un error"
   },
   "login": {
     "title": "Acceso a la plataforma",
@@ -236,7 +237,32 @@
     "chapter": "Capítulo",
     "verse": "Versículo",
     "loadingVerse": "Cargando versículo...",
-    "verseNotFound": "Versículo no encontrado"
+    "verseNotFound": "Versículo no encontrado",
+    "recurring": "Recurrente",
+    "frequency": "Frecuencia",
+    "weekly": "Semanal",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "repeatEvery": "Repetir cada",
+    "week": "semana(s)",
+    "month": "mes(es)",
+    "year": "año(s)",
+    "daysOfWeek": "Días de la semana",
+    "sun": "Dom",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mié",
+    "thu": "Jue",
+    "fri": "Vie",
+    "sat": "Sáb",
+    "sameDay": "Mismo día del mes",
+    "sameWeekDay": "Misma semana del mes",
+    "endAfter": "Finalizar después de",
+    "occurrences": "repetición(es)",
+    "maxOccurrences": "Máx. 24 semanal/mensual, 5 anual",
+    "monthlyOption": "Día del mes",
+    "endDateBeforeStart": "La fecha de fin debe ser posterior a la fecha de inicio",
+    "recurrenceRequired": "Complete la configuración de recurrencia o cierre esta sección"
   },
   "changePassword": {
     "title": "Cambiar Contraseña",

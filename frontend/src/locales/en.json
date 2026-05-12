@@ -28,7 +28,8 @@
     "invalidEmail": "Invalid email format",
     "name": "Name",
     "none": "None",
-    "close": "Close"
+    "close": "Close",
+    "error": "An error occurred"
   },
   "login": {
     "title": "Platform Access",
@@ -236,7 +237,32 @@
     "chapter": "Chapter",
     "verse": "Verse",
     "loadingVerse": "Loading verse...",
-    "verseNotFound": "Verse not found"
+    "verseNotFound": "Verse not found",
+    "recurring": "Recurring",
+    "frequency": "Frequency",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "repeatEvery": "Repeat every",
+    "week": "week(s)",
+    "month": "month(s)",
+    "year": "year(s)",
+    "daysOfWeek": "Days of week",
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sameDay": "Same day of month",
+    "sameWeekDay": "Same weekday of month",
+    "endAfter": "End after",
+    "occurrences": "occurrence(s)",
+    "maxOccurrences": "Max 24 for weekly/monthly, 5 for yearly",
+    "monthlyOption": "Day of the month",
+    "endDateBeforeStart": "End date must be after start date",
+    "recurrenceRequired": "Fill in recurrence settings or collapse this section"
   },
   "changePassword": {
     "title": "Change Password",

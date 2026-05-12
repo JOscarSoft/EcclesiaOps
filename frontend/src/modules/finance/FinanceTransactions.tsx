@@ -15,8 +15,11 @@ import { TransactionFormDialog } from './TransactionFormDialog';
 export const FinanceTransactions = () => {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
+  const today = new Date();
+  const firstOfMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-01`;
+  const lastOfMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate()).padStart(2, '0')}`;
+  const [fromDate, setFromDate] = useState(firstOfMonth);
+  const [toDate, setToDate] = useState(lastOfMonth);
   const [churchFilter, setChurchFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [kindFilter, setKindFilter] = useState('');
@@ -150,8 +153,8 @@ export const FinanceTransactions = () => {
         >
           Exportar CSV
         </Button>
-        {(fromDate || toDate || churchFilter || categoryFilter || kindFilter) && (
-          <Button size="small" onClick={() => { setFromDate(''); setToDate(''); setChurchFilter(''); setCategoryFilter(''); setKindFilter(''); }}>
+        {(fromDate !== firstOfMonth || toDate !== lastOfMonth || churchFilter || categoryFilter || kindFilter) && (
+          <Button size="small" onClick={() => { setFromDate(firstOfMonth); setToDate(lastOfMonth); setChurchFilter(''); setCategoryFilter(''); setKindFilter(''); }}>
             Limpiar
           </Button>
         )}
